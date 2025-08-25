@@ -25,10 +25,9 @@ language such as C.
 
 Each exercise is self-contained and self-explained. However,
 you're encouraged to also check out these Zig language resources
-for more detail:
+for more details:
 
 * https://ziglang.org/learn/
-* https://ziglearn.org/
 * https://ziglang.org/documentation/master/
 * [Zig in Depth! (video series)](https://www.youtube.com/watch?v=MMtvGA1YhW4&list=PLtB7CL7EG7pCw7Xy1SQC53Gl8pI7aDg9t&pp=iAQB)
 
@@ -45,7 +44,7 @@ Verify the installation and build number of `zig` like so:
 
 ```
 $ zig version
-0.15.0-dev.xxxx+xxxxxxxxx
+0.16.0-dev.xxxx+xxxxxxxxx
 ```
 
 Clone this repository with Git:
@@ -73,8 +72,8 @@ the appropriate tag.
 The Zig language is under very active development. In order to be
 current, Ziglings tracks **development** builds of the Zig
 compiler rather than versioned **release** builds. The last
-stable release was `0.14.1`, but Ziglings needs a dev build with
-pre-release version "0.15.0" and a build number at least as high
+stable release was `0.15.1`, but Ziglings needs a dev build with
+pre-release version "0.16.0" and a build number at least as high
 as that shown in the example version check above.
 
 It is likely that you'll download a build which is _greater_ than
