@@ -8,6 +8,7 @@
 //        --o--            comptime        *    |      ..    .
 //     *    |       *  .        .    .   .    --*--  .     *  .
 //  .     .    .    .   . . .      .        .   |   .    .  .
+// (ASCII art depicting a starry sky with "comptime" as rising star)
 //
 // When placed before a variable declaration, 'comptime'
 // guarantees that every usage of that variable will be performed
