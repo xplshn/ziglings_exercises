@@ -146,7 +146,7 @@ pub fn main() void {
 //
 // We'll be seeing @typeName again in Exercise 070. For now, you can
 // see that it takes a Type and returns a u8 "string".
-fn maximumNarcissism(myType: anytype) []const u8 {
+fn maximumNarcissism(myType: type) []const u8 {
     const indexOf = @import("std").mem.indexOf;
 
     // Turn "065_builtins2.Narcissus" into "Narcissus"
