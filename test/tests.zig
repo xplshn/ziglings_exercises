@@ -303,7 +303,7 @@ fn check(
 
 fn readLine(reader: *fs.File.Reader, buf: []u8) !?[]const u8 {
     try reader.interface.readSliceAll(buf);
-    return mem.trimRight(u8, buf, " \r\n");
+    return mem.trimEnd(u8, buf, " \r\n");
 }
 
 /// Fails with a custom error message.
