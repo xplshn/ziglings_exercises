@@ -473,7 +473,7 @@ const ZiglingStep = struct {
             .Exited => |code| {
                 if (code != 0) {
                     // The test failed.
-                    const stderr = std.mem.trimRight(u8, result.stderr, " \r\n");
+                    const stderr = std.mem.trimEnd(u8, result.stderr, " \r\n");
 
                     return self.step.fail("\n{s}", .{stderr});
                 }
@@ -594,7 +594,7 @@ pub fn trimLines(allocator: std.mem.Allocator, buf: []const u8) ![]const u8 {
     var iter = std.mem.splitSequence(u8, buf, " \n");
     while (iter.next()) |line| {
         // TODO: trimming CR characters is probably not necessary.
-        const data = std.mem.trimRight(u8, line, " \r");
+        const data = std.mem.trimEnd(u8, line, " \r");
         try list.appendSlice(allocator, data);
         try list.append(allocator, '\n');
     }
@@ -603,7 +603,7 @@ pub fn trimLines(allocator: std.mem.Allocator, buf: []const u8) ![]const u8 {
 
     // Remove the trailing LF character, that is always present in the exercise
     // output.
-    return std.mem.trimRight(u8, result, "\n");
+    return std.mem.trimEnd(u8, result, "\n");
 }
 
 /// Prints a message to stderr.
@@ -655,7 +655,7 @@ fn validate_exercises() bool {
 
         var iter = std.mem.splitScalar(u8, ex.output, '\n');
         while (iter.next()) |line| {
-            const output = std.mem.trimRight(u8, line, " \r");
+            const output = std.mem.trimEnd(u8, line, " \r");
             if (output.len != line.len) {
                 print("exercise {s} output field lines have trailing whitespace\n", .{
                     ex.main_file,
