@@ -48,15 +48,14 @@
 //        // In order to be able to process the input values,
 //        // memory is required. An allocator is defined here for
 //        // this purpose.
-//        const ally = std.testing.allocator;
+//        const gpa = std.testing.allocator;
 //
-//        // The allocator is used to initialize an array into which
-//        // the numbers are stored.
-//        var list = std.ArrayList(u32).init(ally);
+//        // An array into which the numbers are stored is initialized.
+//        var list: std.ArrayList(u32) = .empty;
 //
 //        // This way you can never forget what is urgently needed
 //        // and the compiler doesn't grumble either.
-//        defer list.deinit();
+//        defer list.deinit(gpa);
 //
 //        // Now it gets exciting:
 //        // A standard tokenizer is called (Zig has several) and
@@ -73,7 +72,7 @@
 //            const n = try parseInt(u32, num, 10);
 //
 //            // Finally the individual values are stored in the array.
-//            try list.append(n);
+//            try list.append(gpa, n);
 //        }
 //
 //        // For the subsequent test, a second static array is created,
