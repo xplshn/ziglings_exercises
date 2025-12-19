@@ -16,7 +16,7 @@
 // Therefore, the comments for the std.Io.Writer.print() function are
 // the only way to definitively learn how to format strings in Zig:
 //
-//     https://codeberg.org/ziglang/zig/src/branch/master/lib/std/Io/Writer.zig#L568
+//     https://codeberg.org/ziglang/zig/src/branch/master/lib/std/Io/Writer.zig#L537
 //
 // Zig already has a very nice selection of formatting options.
 // These can be used in different ways, but generally to convert
