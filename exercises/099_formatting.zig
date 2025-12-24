@@ -13,7 +13,7 @@
 // no official documentation for standard library features such
 // as string formatting.
 //
-// Therefore, the comments for the std.Io.Writer.print() function are
+// Therefore, the comments for the format() function are
 // the only way to definitively learn how to format strings in Zig:
 //
 //     https://codeberg.org/ziglang/zig/src/branch/master/lib/std/Io/Writer.zig#L537
