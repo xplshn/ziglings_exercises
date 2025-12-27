@@ -15,8 +15,12 @@ const std = @import("std");
 // https://ziglang.org/documentation/master/#Inferred-Error-Sets
 //
 pub fn main() !void {
+    // We need an io instance for I/O operations;
+    // we'll learn how to create them later.
+    const io = std.Options.debug_io;
+
     // We get a Writer for Standard Out so we can print() to it.
-    var stdout = std.fs.File.stdout().writer(&.{});
+    var stdout = std.Io.File.stdout().writer(io, &.{});
 
     // Unlike std.debug.print(), the Standard Out writer can fail
     // with an error. We don't care _what_ the error is, we want
