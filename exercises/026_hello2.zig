@@ -5,7 +5,7 @@
 //
 const std = @import("std");
 
-// Instance for input/output, we'll learn how to create them later.
+// Instance for input/output operations, we'll learn how to create them later.
 const io = std.Options.debug_io;
 
 // Take note that this main() definition now returns "!void" rather
@@ -18,8 +18,9 @@ const io = std.Options.debug_io;
 // https://ziglang.org/documentation/master/#Inferred-Error-Sets
 //
 pub fn main() !void {
-    // We get a Writer interface for Standard Out so we can print() to it.
+    // We get a Writer for Standard Out...
     var stdout_writer = std.Io.File.stdout().writer(io, &.{});
+    // ...and extract its interface so we can print() to it.
     const stdout = &stdout_writer.interface;
 
     // Unlike std.debug.print(), the Standard Out writer can fail
