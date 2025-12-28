@@ -124,7 +124,7 @@ const progress_filename = ".progress.txt";
 
 pub fn build(b: *Build) !void {
     const io = b.graph.io;
-    // const io = std.Options.debug_io;
+
     if (!validate_exercises()) std.process.exit(2);
 
     use_color_escapes = false;
@@ -396,7 +396,6 @@ const ZiglingStep = struct {
         const max_output_bytes = 1 * 1024 * 1024;
 
         const result = Child.run(b.allocator, io, .{
-            // .allocator = b.allocator,
             .argv = &.{exe_path},
             .cwd = b.build_root.path.?,
             .cwd_dir = b.build_root.handle,
@@ -540,7 +539,7 @@ const ZiglingStep = struct {
             .exe => self.exercise.name(),
             .@"test" => "test",
         };
-        const sep = std.fs.path.sep_str;
+        const sep = std.Io.Dir.path.sep_str;
         const root_path = exe_dir.?.root_dir.path.?;
         const sub_path = exe_dir.?.subPathOrDot();
         const exe_path = b.fmt("{s}{s}{s}{s}{s}", .{ root_path, sep, sub_path, sep, exe_name });
