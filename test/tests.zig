@@ -8,10 +8,9 @@ const mem = std.mem;
 const Allocator = std.mem.Allocator;
 const Child = std.process.Child;
 const Build = std.Build;
-const LazyPath = std.Build.LazyPath;
-// const Reader = fs.File.Reader;
-const RunStep = std.Build.RunStep;
 const Step = Build.Step;
+const RunStep = Build.RunStep;
+const LazyPath = Build.LazyPath;
 
 const Exercise = root.Exercise;
 
@@ -162,8 +161,6 @@ const CheckNamedStep = struct {
         );
         defer stderr_file.close(io);
 
-        // var threaded: std.Io.Threaded = .init_single_threaded;
-        // const io = threaded.io();
         var stderr = stderr_file.readerStreaming(io, &.{});
         {
             // Skip the logo.
@@ -218,8 +215,6 @@ const CheckStep = struct {
         );
         defer stderr_file.close(io);
 
-        // var threaded: std.Io.Threaded = .init_single_threaded;
-        // const io = threaded.io();
         var stderr = stderr_file.readerStreaming(io, &.{});
         for (exercises) |ex| {
             if (ex.number() == 1) {
