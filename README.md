@@ -86,6 +86,8 @@ that if you update one, you may need to also update the other.
 
 ### Version Changes
 
+* *2026-01-xx* zig 0.16.0-dev.xx - file system I/O integrated with the std.Io interface, see [#30232](https://codeberg.org/ziglang/zig/pulls/30232)
+
 * *2025-11-01* zig 0.16.0-dev.1204 - more changes due to new I/O API, see [#25592](https://github.com/ziglang/zig/pull/25592)
 * *2025-09-24* zig 0.16.0-dev.377 - Enable passing file content as args, see [#25228](https://github.com/ziglang/zig/pull/25228)
 * *2025-09-03* zig 0.16.0-dev.164 - changes in reader, see [#25077](https://github.com/ziglang/zig/pull/25077)
@@ -233,7 +235,7 @@ Zig Core Language
 * [x] Sentinel termination
 * [x] Quoted identifiers @""
 * [x] Anonymous structs/tuples/lists
-* [ ] Async <--- ironically awaiting upstream Zig updates
+* [ ] Async I/O
 * [X] Interfaces
 * [X] Bit manipulation
 * [X] Working with C
