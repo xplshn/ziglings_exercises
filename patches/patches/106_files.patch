@@ -1,6 +1,6 @@
---- exercises/106_files.zig	2025-08-24 19:23:55.168565003 +0200
-+++ answers/106_files.zig	2025-08-24 19:25:37.745597511 +0200
-@@ -35,7 +35,7 @@
+--- exercises/106_files.zig	2025-12-28 20:38:53.005504479 +0100
++++ answers/106_files.zig	2025-12-28 20:37:42.742154100 +0100
+@@ -39,7 +39,7 @@
          // by doing nothing
          //
          // we want to catch error.PathAlreadyExists and do nothing
@@ -9,21 +9,12 @@
          // if there's any other unexpected error we just propagate it through
          else => return e,
      };
-@@ -44,7 +44,7 @@
-     // wait a minute...
-     // opening a directory might fail!
-     // what should we do here?
--    var output_dir: std.fs.Dir = cwd.openDir("output", .{});
-+    var output_dir: std.fs.Dir = try cwd.openDir("output", .{});
-     defer output_dir.close();
- 
-     // we try to open the file `zigling.txt`,
-@@ -55,7 +55,7 @@
+@@ -59,7 +59,7 @@
      // but here we are not yet done writing to the file
      // if only there were a keyword in Zig that
      // allowed you to "defer" code execution to the end of the scope...
--    file.close();
-+    defer file.close();
+-    file.close(io);
++    defer file.close(io);
  
-     // you are not allowed to move these two lines above the file closing line!
-     const byte_written = try file.write("It's zigling time!");
+     // you are not allowed to move these lines above the file closing line!
+     var file_writer = file.writer(io, &.{});

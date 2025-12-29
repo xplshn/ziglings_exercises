@@ -12,23 +12,27 @@
 // Fortunately, the Zig Standard Library provides a simple API for interacting
 // with the file system, see the detail documentation here:
 //
-// https://ziglang.org/documentation/master/std/#std.fs
+// https://ziglang.org/documentation/master/std/#std.Io
 //
 // In this exercise, we'll try to:
 //   - create a new directory,
 //   - open a file in the directory,
 //   - write to the file.
 //
-// import std as always
+// Note: For simplicity, we write byte-by-byte without buffering.
+// In real applications, you'd typically use a buffer for better
+// performance. We'll learn about buffered I/O in a later exercise.
+//
 const std = @import("std");
+const io = std.Options.debug_io;
 
 pub fn main() !void {
     // first we get the current working directory
-    const cwd: std.fs.Dir = std.fs.cwd();
+    const cwd: std.Io.Dir = std.Io.Dir.cwd();
 
     // then we'll try to make a new directory /output/
     // to store our output files.
-    cwd.makeDir("output") catch |e| switch (e) {
+    cwd.createDir(io, "output", .default_dir) catch |e| switch (e) {
         // there is a chance you might want to run this
         // program more than once and the path might already
         // have been created, so we'll have to handle this error
@@ -44,21 +48,24 @@ pub fn main() !void {
     // wait a minute...
     // opening a directory might fail!
     // what should we do here?
-    var output_dir: std.fs.Dir = cwd.openDir("output", .{});
-    defer output_dir.close();
+    var output_dir: std.Io.Dir = try cwd.openDir(io, "output", .{});
+    defer output_dir.close(io);
 
     // we try to open the file `zigling.txt`,
     // and propagate any error up
-    const file: std.fs.File = try output_dir.createFile("zigling.txt", .{});
+    const file: std.Io.File = try output_dir.createFile(io, "zigling.txt", .{});
     // it is a good habit to close a file after you are done with it
     // so that other programs can read it and prevent data corruption
     // but here we are not yet done writing to the file
     // if only there were a keyword in Zig that
     // allowed you to "defer" code execution to the end of the scope...
-    file.close();
+    file.close(io);
 
-    // you are not allowed to move these two lines above the file closing line!
-    const byte_written = try file.write("It's zigling time!");
+    // you are not allowed to move these lines above the file closing line!
+    var file_writer = file.writer(io, &.{});
+    const writer = &file_writer.interface;
+
+    const byte_written = try writer.write("It's zigling time!");
     std.debug.print("Successfully wrote {d} bytes.\n", .{byte_written});
 }
 // to check if you actually write to the file, you can either,
@@ -71,8 +78,8 @@ pub fn main() !void {
 // More on Creating files
 //
 // notice in:
-// ... try output_dir.createFile("zigling.txt", .{});
-//                                              ^^^
+// ... try output_dir.createFile(io, "zigling.txt", .{});
+//                                                  ^^^
 //                 we passed this anonymous struct to the function call
 //
 // this is the struct `CreateFlag` with default fields
@@ -87,7 +94,7 @@ pub fn main() !void {
 //
 // Question:
 //   - what should you do if you want to also read the file after opening it?
-//   - go to the documentation of the struct `std.fs.Dir` here:
+//   - go to the documentation of the struct `std.Io.Dir` here:
 //     https://ziglang.org/documentation/master/std/#std.fs.Dir
 //       - can you find a function for opening a file? how about deleting a file?
 //       - what kind of options can you use with those functions?
