@@ -5,7 +5,7 @@
 //
 const std = @import("std");
 
-// Instance for input/output operations, we'll learn how to create them later.
+// Instance for input/output operations; we will learn more about this later.
 const io = std.Options.debug_io;
 
 // Take note that this main() definition now returns "!void" rather
