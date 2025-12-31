@@ -15,20 +15,25 @@
 //    - Then, we initialize an array of characters with all letter 'A', and print it
 //    - After that, we read the content of the file into the array
 //    - Finally, we print out the content we just read
+//
+// Note: For simplicity, we read byte-by-byte without buffering.
+// In real applications, you'd typically use a buffer for better
+// performance. We'll learn about buffered I/O in a later exercise.
 
 const std = @import("std");
+const io = std.Options.debug_io;
 
 pub fn main() !void {
     // Get the current working directory
-    const cwd = std.fs.cwd();
+    const cwd = std.Io.Dir.cwd();
 
     // try to open ./output assuming you did your 106_files exercise
-    var output_dir = try cwd.openDir("output", .{});
-    defer output_dir.close();
+    var output_dir = try cwd.openDir(io, "output", .{});
+    defer output_dir.close(io);
 
     // try to open the file
-    const file = try output_dir.openFile("zigling.txt", .{});
-    defer file.close();
+    const file = try output_dir.openFile(io, "zigling.txt", .{});
+    defer file.close(io);
 
     // initialize an array of u8 with all letter 'A'
     // we need to pick the size of the array, 64 seems like a good number
@@ -37,10 +42,13 @@ pub fn main() !void {
     // this should print out : `AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA`
     std.debug.print("{s}\n", .{content});
 
+    var file_reader = file.reader(io, &.{});
+    const reader = &file_reader.interface;
+
     // okay, seems like a threat of violence is not the answer in this case
     // can you go here to find a way to read the content?
-    // https://ziglang.org/documentation/master/std/#std.fs.File
-    // hint: you might find two answers that are both valid in this case
+    // https://ziglang.org/documentation/master/std/#std.Io.Reader
+    // hint: look for a method that reads into a slice
     const bytes_read = zig_read_the_file_or_i_will_fight_you(&content);
 
     // Woah, too screamy. I know you're excited for zigling time but tone it down a bit.

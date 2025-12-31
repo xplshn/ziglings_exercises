@@ -15,7 +15,7 @@ const print = std.debug.print;
 //     1) Getting Started
 //     2) Version Changes
 comptime {
-    const required_zig = "0.16.0-dev.1204";
+    const required_zig = "0.16.0-dev.1859";
     const current_zig = builtin.zig_version;
     const min_zig = std.SemanticVersion.parse(required_zig) catch unreachable;
     if (current_zig.order(min_zig) == .lt) {
@@ -24,7 +24,7 @@ comptime {
             \\
             \\Ziglings requires development build
             \\
-            \\{}
+            \\{s}
             \\
             \\or higher.
             \\
@@ -34,7 +34,7 @@ comptime {
             \\
             \\
         ;
-        @compileError(std.fmt.comptimePrint(error_message, .{min_zig}));
+        @compileError(std.fmt.comptimePrint(error_message, .{required_zig}));
     }
 }
 
@@ -123,10 +123,12 @@ pub const logo =
 const progress_filename = ".progress.txt";
 
 pub fn build(b: *Build) !void {
+    const io = b.graph.io;
+
     if (!validate_exercises()) std.process.exit(2);
 
     use_color_escapes = false;
-    if (std.fs.File.stderr().supportsAnsiEscapeCodes()) {
+    if (try std.Io.File.stderr().supportsAnsiEscapeCodes(io)) {
         use_color_escapes = true;
     } else if (builtin.os.tag == .windows) {
         const w32 = struct {
@@ -245,9 +247,9 @@ pub fn build(b: *Build) !void {
     }
 
     if (reset) |_| {
-        std.fs.cwd().deleteFile(progress_filename) catch |err| {
+        std.Io.Dir.cwd().deleteFile(io, progress_filename) catch |err| {
             switch (err) {
-                std.fs.Dir.DeleteFileError.FileNotFound => {},
+                std.Io.Dir.DeleteFileError.FileNotFound => {},
                 else => {
                     print("Unable to remove progress file, Error: {}\n", .{err});
                     return err;
@@ -268,17 +270,20 @@ pub fn build(b: *Build) !void {
 
     var starting_exercise: u32 = 0;
 
-    if (std.fs.cwd().openFile(progress_filename, .{})) |progress_file| {
-        defer progress_file.close();
+    if (std.Io.Dir.cwd().openFile(io, progress_filename, .{})) |progress_file| {
+        defer progress_file.close(io);
 
-        const progress_file_size = try progress_file.getEndPos();
+        const progress_file_size = try progress_file.length(io);
 
         var gpa = std.heap.GeneralPurposeAllocator(.{}){};
         defer _ = gpa.deinit();
         const allocator = gpa.allocator();
         const contents = try allocator.alloc(u8, progress_file_size);
         defer allocator.free(contents);
-        const bytes_read = try progress_file.read(contents);
+        var file_buffer: [1024]u8 = undefined;
+        var file_reader = progress_file.reader(io, &file_buffer);
+        // try file_reader.interface.readSliceAll(contents);
+        const bytes_read = try file_reader.interface.readSliceShort(contents);
         if (bytes_read != progress_file_size) {
             return error.UnexpectedEOF;
         }
@@ -286,7 +291,7 @@ pub fn build(b: *Build) !void {
         starting_exercise = try std.fmt.parseInt(u32, contents, 10);
     } else |err| {
         switch (err) {
-            std.fs.File.OpenError.FileNotFound => {
+            std.Io.File.OpenError.FileNotFound => {
                 // This is fine, may be the first time tests are run or progress have been reset
             },
             else => {
@@ -382,15 +387,15 @@ const ZiglingStep = struct {
 
     fn run(self: *ZiglingStep, exe_path: []const u8, _: std.Progress.Node) !void {
         resetLine();
-        print("Checking: {s}\n", .{self.exercise.main_file});
-
         const b = self.step.owner;
+        const io = b.graph.io;
+
+        print("Checking: {s}\n", .{self.exercise.main_file});
 
         // Allow up to 1 MB of stdout capture.
         const max_output_bytes = 1 * 1024 * 1024;
 
-        const result = Child.run(.{
-            .allocator = b.allocator,
+        const result = Child.run(b.allocator, io, .{
             .argv = &.{exe_path},
             .cwd = b.build_root.path.?,
             .cwd_dir = b.build_root.handle,
@@ -409,6 +414,7 @@ const ZiglingStep = struct {
 
     fn check_output(self: *ZiglingStep, result: Child.RunResult) !void {
         const b = self.step.owner;
+        const io = b.graph.io;
 
         // Make sure it exited cleanly.
         switch (result.term) {
@@ -456,14 +462,15 @@ const ZiglingStep = struct {
         const progress = try std.fmt.allocPrint(b.allocator, "{d}", .{self.exercise.number()});
         defer b.allocator.free(progress);
 
-        const file = try std.fs.cwd().createFile(
+        const file = try std.Io.Dir.cwd().createFile(
+            io,
             progress_filename,
             .{ .read = true, .truncate = true },
         );
-        defer file.close();
+        defer file.close(io);
 
-        try file.writeAll(progress);
-        try file.sync();
+        try file.writeStreamingAll(io, progress);
+        try file.sync(io);
 
         print("{s}PASSED:\n{s}{s}\n\n", .{ green_text, output, reset_text });
     }
@@ -532,7 +539,7 @@ const ZiglingStep = struct {
             .exe => self.exercise.name(),
             .@"test" => "test",
         };
-        const sep = std.fs.path.sep_str;
+        const sep = std.Io.Dir.path.sep_str;
         const root_path = exe_dir.?.root_dir.path.?;
         const sub_path = exe_dir.?.subPathOrDot();
         const exe_path = b.fmt("{s}{s}{s}{s}{s}", .{ root_path, sep, sub_path, sep, exe_name });
@@ -558,6 +565,8 @@ const ZiglingStep = struct {
 
     fn printErrors(self: *ZiglingStep) void {
         resetLine();
+        const b = self.step.owner;
+        const io = b.graph.io;
 
         // Display error/warning messages.
         if (self.step.result_error_msgs.items.len > 0) {
@@ -575,7 +584,10 @@ const ZiglingStep = struct {
         else
             .off;
         if (self.step.result_error_bundle.errorMessageCount() > 0) {
-            self.step.result_error_bundle.renderToStdErr(.{}, color);
+            self.step.result_error_bundle.renderToStderr(io, .{}, color) catch |err| {
+                print("{}\n", .{err});
+                return;
+            };
         }
     }
 };

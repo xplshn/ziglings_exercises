@@ -5,6 +5,9 @@
 //
 const std = @import("std");
 
+// Instance for input/output operations; we will learn more about this later.
+const io = std.Options.debug_io;
+
 // Take note that this main() definition now returns "!void" rather
 // than just "void". Since there's no specific error type, this means
 // that Zig will infer the error type. This is appropriate in the case
@@ -15,13 +18,15 @@ const std = @import("std");
 // https://ziglang.org/documentation/master/#Inferred-Error-Sets
 //
 pub fn main() !void {
-    // We get a Writer for Standard Out so we can print() to it.
-    var stdout = std.fs.File.stdout().writer(&.{});
+    // We get a Writer for Standard Out...
+    var stdout_writer = std.Io.File.stdout().writer(io, &.{});
+    // ...and extract its interface so we can print() to it.
+    const stdout = &stdout_writer.interface;
 
     // Unlike std.debug.print(), the Standard Out writer can fail
     // with an error. We don't care _what_ the error is, we want
     // to be able to pass it up as a return value of main().
     //
     // We just learned of a single statement which can accomplish this.
-    stdout.interface.print("Hello world!\n", .{});
+    stdout.print("Hello world!\n", .{});
 }
