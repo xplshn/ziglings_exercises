@@ -2,8 +2,8 @@
 // Oh no, this is supposed to print "Hello world!" but it needs
 // your help.
 //
-// Zig functions are private by default but the main() function
-// should be public.
+// Zig functions are private by default, but the main() function
+// must be public.
 //
 // A function is made public with the "pub" statement like so:
 //
