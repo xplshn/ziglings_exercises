@@ -86,7 +86,8 @@ that if you update one, you may need to also update the other.
 
 ### Version Changes
 
-* 2025-12-28 zig 0.16.0-dev.1859 - file system I/O integrated with the std.Io interface, see [#30232](https://codeberg.org/ziglang/zig/pulls/30232)
+* 2026-01-06 zig 0.16.0-dev.1976 - move process API to `std.Io` and changes to main/environ/argv, see [#30644](https://codeberg.org/ziglang/zig/pulls/30644)
+* *2025-12-28* zig 0.16.0-dev.1859 - file system I/O integrated with the std.Io interface, see [#30232](https://codeberg.org/ziglang/zig/pulls/30232)
 * *2025-11-01* zig 0.16.0-dev.1204 - more changes due to new I/O API, see [#25592](https://github.com/ziglang/zig/pull/25592)
 * *2025-09-24* zig 0.16.0-dev.377 - Enable passing file content as args, see [#25228](https://github.com/ziglang/zig/pull/25228)
 * *2025-09-03* zig 0.16.0-dev.164 - changes in reader, see [#25077](https://github.com/ziglang/zig/pull/25077)
