@@ -38,7 +38,8 @@ is incredibly friendly and helpful!
 
 Install a [development build](https://ziglang.org/download/) of
 the Zig compiler.  (See the "master" section of the downloads
-page.)
+page.) Sometimes the latest build is not available there;
+in that case, you can download it directly from the [build directory](https://ziglang.org/download/index.json).
 
 Verify the installation and build number of `zig` like so:
 
@@ -86,6 +87,7 @@ that if you update one, you may need to also update the other.
 
 ### Version Changes
 
+* 2026-01-07 zig 0.16.0-dev.2040 - adjust temp files, see [#30683](https://codeberg.org/ziglang/zig/pulls/30683)
 * 2026-01-06 zig 0.16.0-dev.1976 - move process API to `std.Io` and changes to main/environ/argv, see [#30644](https://codeberg.org/ziglang/zig/pulls/30644)
 * *2025-12-28* zig 0.16.0-dev.1859 - file system I/O integrated with the std.Io interface, see [#30232](https://codeberg.org/ziglang/zig/pulls/30232)
 * *2025-11-01* zig 0.16.0-dev.1204 - more changes due to new I/O API, see [#25592](https://github.com/ziglang/zig/pull/25592)
