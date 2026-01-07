@@ -5,7 +5,7 @@ const tests = @import("test/tests.zig");
 const Build = std.Build;
 const CompileStep = Build.CompileStep;
 const Step = Build.Step;
-const Child = std.process.Child;
+const Process = std.process;
 
 const assert = std.debug.assert;
 const join = std.fs.path.join;
@@ -395,7 +395,7 @@ const ZiglingStep = struct {
         // Allow up to 1 MB of stdout capture.
         const max_output_bytes = 1 * 1024 * 1024;
 
-        const result = Child.run(b.allocator, io, .{
+        const result = Process.run(b.allocator, io, .{
             .argv = &.{exe_path},
             .cwd = b.build_root.path.?,
             .cwd_dir = b.build_root.handle,
@@ -412,13 +412,13 @@ const ZiglingStep = struct {
         }
     }
 
-    fn check_output(self: *ZiglingStep, result: Child.RunResult) !void {
+    fn check_output(self: *ZiglingStep, result: Process.RunResult) !void {
         const b = self.step.owner;
         const io = b.graph.io;
 
         // Make sure it exited cleanly.
         switch (result.term) {
-            .Exited => |code| {
+            .exited => |code| {
                 if (code != 0) {
                     return self.step.fail("{s} exited with error code {d} (expected {})", .{
                         self.exercise.main_file, code, 0,
@@ -475,9 +475,9 @@ const ZiglingStep = struct {
         print("{s}PASSED:\n{s}{s}\n\n", .{ green_text, output, reset_text });
     }
 
-    fn check_test(self: *ZiglingStep, result: Child.RunResult) !void {
+    fn check_test(self: *ZiglingStep, result: Process.RunResult) !void {
         switch (result.term) {
-            .Exited => |code| {
+            .exited => |code| {
                 if (code != 0) {
                     // The test failed.
                     const stderr = std.mem.trimEnd(u8, result.stderr, " \r\n");

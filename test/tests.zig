@@ -6,7 +6,7 @@ const fmt = std.fmt;
 const mem = std.mem;
 
 const Allocator = std.mem.Allocator;
-const Child = std.process.Child;
+const Process = std.process;
 const Build = std.Build;
 const Step = Build.Step;
 const RunStep = Build.RunStep;
@@ -396,8 +396,7 @@ fn heal(allocator: Allocator, exercises: []const Exercise, work_path: []const u8
 
         const argv = &.{ "patch", "-i", patch, "-o", output, "-s", file };
 
-        var child = Child.init(argv, allocator);
-        _ = try child.spawnAndWait(io);
+        _ = try Process.run(allocator, io, .{ .argv = argv });
     }
 }
 
