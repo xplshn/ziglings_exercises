@@ -394,7 +394,11 @@ fn heal(allocator: Allocator, exercises: []const Exercise, work_path: []const u8
 
 fn createTempPath(b: *Build) ![]const u8 {
     const io = b.graph.io;
-    const rand_int = std.crypto.random.int(u64);
+    const rand_int = r: {
+        var x: u64 = undefined;
+        io.random(@ptrCast(&x));
+        break :r x;
+    };
     const tmp_dir_sub_path = "tmp" ++ std.Io.Dir.path.sep_str ++ std.fmt.hex(rand_int);
     const result_path = b.cache_root.join(b.allocator, &.{tmp_dir_sub_path}) catch @panic("OOM");
     try b.cache_root.handle.createDirPath(io, tmp_dir_sub_path);
