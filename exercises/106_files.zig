@@ -95,6 +95,6 @@ pub fn main() !void {
 // Question:
 //   - what should you do if you want to also read the file after opening it?
 //   - go to the documentation of the struct `std.Io.Dir` here:
-//     https://ziglang.org/documentation/master/std/#std.fs.Dir
+//     https://ziglang.org/documentation/master/std/#std.Io.Dir
 //       - can you find a function for opening a file? how about deleting a file?
 //       - what kind of options can you use with those functions?
