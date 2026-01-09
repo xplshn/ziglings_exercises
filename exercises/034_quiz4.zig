@@ -6,11 +6,11 @@
 //     my_num=42
 //
 const std = @import("std");
-const io = std.Options.debug_io;
 
 const NumError = error{IllegalNumber};
 
-pub fn main() void {
+pub fn main(init: std.process.Init) !void {
+    const io = init.io;
     var stdout_writer = std.Io.File.stdout().writer(io, &.{});
     const stdout = &stdout_writer.interface;
 
