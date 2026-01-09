@@ -24,9 +24,11 @@
 // performance. We'll learn about buffered I/O in a later exercise.
 //
 const std = @import("std");
-const io = std.Options.debug_io;
 
-pub fn main() !void {
+pub fn main(init: std.process.Init) !void {
+    // default I/O implementation
+    const io = init.io;
+
     // first we get the current working directory
     const cwd: std.Io.Dir = std.Io.Dir.cwd();
 
