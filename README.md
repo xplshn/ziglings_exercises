@@ -87,6 +87,7 @@ that if you update one, you may need to also update the other.
 
 ### Version Changes
 
+* 2026-01-09 zig 0.16.0-dev.2075 - move randomness API to `std.Io`, see [#30709](https://codeberg.org/ziglang/zig/pulls/30709)
 * 2026-01-07 zig 0.16.0-dev.2040 - adjust temp files, see [#30683](https://codeberg.org/ziglang/zig/pulls/30683)
 * 2026-01-06 zig 0.16.0-dev.1976 - move process API to `std.Io` and changes to main/environ/argv, see [#30644](https://codeberg.org/ziglang/zig/pulls/30644)
 * *2025-12-28* zig 0.16.0-dev.1859 - file system I/O integrated with the std.Io interface, see [#30232](https://codeberg.org/ziglang/zig/pulls/30232)

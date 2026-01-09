@@ -15,7 +15,7 @@ const print = std.debug.print;
 //     1) Getting Started
 //     2) Version Changes
 comptime {
-    const required_zig = "0.16.0-dev.2040";
+    const required_zig = "0.16.0-dev.2075";
     const current_zig = builtin.zig_version;
     const min_zig = std.SemanticVersion.parse(required_zig) catch unreachable;
     if (current_zig.order(min_zig) == .lt) {
@@ -206,7 +206,7 @@ pub fn build(b: *Build) !void {
 
         var prng = std.Random.DefaultPrng.init(blk: {
             var seed: u64 = undefined;
-            try std.posix.getrandom(std.mem.asBytes(&seed));
+            io.random(std.mem.asBytes(&seed));
             break :blk seed;
         });
         const rnd = prng.random();
@@ -1287,7 +1287,7 @@ const exercises = [_]Exercise{
         \\Max difference (new fn): 0.014
         ,
     },
-    .{ .main_file = "110_quiz9.zig", .output =
+    .{ .main_file = "110_quiz9.zig", .output = 
     \\Toggle pins with XOR on PORTB
     \\-----------------------------
     \\  1100 // (initial state of PORTB)
