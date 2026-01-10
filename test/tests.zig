@@ -21,9 +21,10 @@ pub fn addCliTests(b: *std.Build, exercises: []const Exercise) *Step {
         // Test that `zig build -Dhealed -Dn=n` selects the nth exercise.
         const case_step = createCase(b, "case-1");
 
-        const tmp_path = makeTempPath(b) catch |err| {
+        const tmp_path = createTempPath(b) catch |err| {
             return fail(step, "unable to make tmp path: {s}\n", .{@errorName(err)});
         };
+        defer deleteTmpPath(b, tmp_path);
 
         const heal_step = HealStep.create(b, exercises, tmp_path);
 
@@ -47,20 +48,16 @@ pub fn addCliTests(b: *std.Build, exercises: []const Exercise) *Step {
 
             case_step.dependOn(&verify.step);
         }
-
-        const cleanup = b.addRemoveDirTree(.{ .src_path = .{ .owner = b, .sub_path = tmp_path } });
-        cleanup.step.dependOn(case_step);
-
-        step.dependOn(&cleanup.step);
     }
 
     {
         // Test that `zig build -Dhealed` processes all the exercises in order.
         const case_step = createCase(b, "case-2");
 
-        const tmp_path = makeTempPath(b) catch |err| {
+        const tmp_path = createTempPath(b) catch |err| {
             return fail(step, "unable to make tmp path: {s}\n", .{@errorName(err)});
         };
+        defer deleteTmpPath(b, tmp_path);
 
         const heal_step = HealStep.create(b, exercises, tmp_path);
         heal_step.step.dependOn(case_step);
@@ -79,11 +76,6 @@ pub fn addCliTests(b: *std.Build, exercises: []const Exercise) *Step {
         const stderr = cmd.captureStdErr(.{});
         const verify = CheckStep.create(b, exercises, stderr);
         verify.step.dependOn(&cmd.step);
-
-        const cleanup = b.addRemoveDirTree(.{ .src_path = .{ .owner = b, .sub_path = tmp_path } });
-        cleanup.step.dependOn(&verify.step);
-
-        step.dependOn(&cleanup.step);
     }
 
     {
@@ -400,13 +392,22 @@ fn heal(allocator: Allocator, exercises: []const Exercise, work_path: []const u8
     }
 }
 
-/// This function is the same as the one in std.Build.makeTempPath, with the
-/// difference that returns an error when the temp path cannot be created.
-pub fn makeTempPath(b: *Build) ![]const u8 {
+fn createTempPath(b: *Build) ![]const u8 {
     const io = b.graph.io;
-    const rand_int = std.crypto.random.int(u64);
+    const rand_int = r: {
+        var x: u64 = undefined;
+        io.random(@ptrCast(&x));
+        break :r x;
+    };
     const tmp_dir_sub_path = "tmp" ++ std.Io.Dir.path.sep_str ++ std.fmt.hex(rand_int);
     const result_path = b.cache_root.join(b.allocator, &.{tmp_dir_sub_path}) catch @panic("OOM");
     try b.cache_root.handle.createDirPath(io, tmp_dir_sub_path);
     return result_path;
+}
+
+fn deleteTmpPath(b: *Build, path: []const u8) void {
+    const io = b.graph.io;
+    std.Io.Dir.cwd().deleteTree(io, path) catch |err| {
+        std.log.warn("failed to delete {s}: {t}", .{ path, err });
+    };
 }

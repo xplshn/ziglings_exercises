@@ -24,9 +24,11 @@
 // performance. We'll learn about buffered I/O in a later exercise.
 //
 const std = @import("std");
-const io = std.Options.debug_io;
 
-pub fn main() !void {
+pub fn main(init: std.process.Init) !void {
+    // default I/O implementation
+    const io = init.io;
+
     // first we get the current working directory
     const cwd: std.Io.Dir = std.Io.Dir.cwd();
 
@@ -95,6 +97,6 @@ pub fn main() !void {
 // Question:
 //   - what should you do if you want to also read the file after opening it?
 //   - go to the documentation of the struct `std.Io.Dir` here:
-//     https://ziglang.org/documentation/master/std/#std.fs.Dir
+//     https://ziglang.org/documentation/master/std/#std.Io.Dir
 //       - can you find a function for opening a file? how about deleting a file?
 //       - what kind of options can you use with those functions?
