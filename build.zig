@@ -15,7 +15,7 @@ const print = std.debug.print;
 //     1) Getting Started
 //     2) Version Changes
 comptime {
-    const required_zig = "0.16.0-dev.2075";
+    const required_zig = "0.16.0-dev.2471";
     const current_zig = builtin.zig_version;
     const min_zig = std.SemanticVersion.parse(required_zig) catch unreachable;
     if (current_zig.order(min_zig) == .lt) {
@@ -1286,7 +1286,7 @@ const exercises = [_]Exercise{
         \\Max difference (new fn): 0.014
         ,
     },
-    .{ .main_file = "110_quiz9.zig", .output = 
+    .{ .main_file = "110_quiz9.zig", .output =
     \\Toggle pins with XOR on PORTB
     \\-----------------------------
     \\  1100 // (initial state of PORTB)
