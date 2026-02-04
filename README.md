@@ -87,6 +87,7 @@ that if you update one, you may need to also update the other.
 
 ### Version Changes
 
+* 2026-02-04 zig 0.16.0-dev.2471 - added process.Child.Cwd, see [#31090](https://codeberg.org/ziglang/zig/pulls/31090)
 * 2026-01-09 zig 0.16.0-dev.2075 - move randomness API to `std.Io`, see [#30709](https://codeberg.org/ziglang/zig/pulls/30709)
 * 2026-01-07 zig 0.16.0-dev.2040 - adjust temp files, see [#30683](https://codeberg.org/ziglang/zig/pulls/30683)
 * 2026-01-06 zig 0.16.0-dev.1976 - move process API to `std.Io` and changes to main/environ/argv, see [#30644](https://codeberg.org/ziglang/zig/pulls/30644)
