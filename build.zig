@@ -397,9 +397,8 @@ const ZiglingStep = struct {
 
         const result = Process.run(b.allocator, io, .{
             .argv = &.{exe_path},
-            .cwd = b.build_root.path.?,
-            .cwd_dir = b.build_root.handle,
-            .max_output_bytes = max_output_bytes,
+            .cwd = .{ .path = b.build_root.path.? },
+            .stdout_limit = .limited(max_output_bytes),
         }) catch |err| {
             return self.step.fail("unable to spawn {s}: {s}", .{
                 exe_path, @errorName(err),
