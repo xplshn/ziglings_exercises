@@ -128,23 +128,13 @@ pub fn build(b: *Build) !void {
     if (!validate_exercises()) std.process.exit(2);
 
     use_color_escapes = false;
-    if (try std.Io.File.stderr().supportsAnsiEscapeCodes(io)) {
+    const stderr = std.Io.File.stderr();
+    if (try stderr.supportsAnsiEscapeCodes(io)) {
         use_color_escapes = true;
     } else if (builtin.os.tag == .windows) {
-        const w32 = struct {
-            const DWORD = std.os.windows.DWORD;
-            const ENABLE_VIRTUAL_TERMINAL_PROCESSING = 0x0004;
-            const STD_ERROR_HANDLE: DWORD = @bitCast(@as(i32, -12));
-            const GetStdHandle = std.os.windows.kernel32.GetStdHandle;
-            const GetConsoleMode = std.os.windows.kernel32.GetConsoleMode;
-            const SetConsoleMode = std.os.windows.kernel32.SetConsoleMode;
-        };
-        const handle = w32.GetStdHandle(w32.STD_ERROR_HANDLE).?;
-        var mode: w32.DWORD = 0;
-        if (w32.GetConsoleMode(handle, &mode) != 0) {
-            mode |= w32.ENABLE_VIRTUAL_TERMINAL_PROCESSING;
-            use_color_escapes = w32.SetConsoleMode(handle, mode) != 0;
-        }
+        if (stderr.enableAnsiEscapeCodes(io)) {
+            use_color_escapes = true;
+        } else |_| {}
     }
 
     if (use_color_escapes) {
