@@ -14,8 +14,8 @@
 //
 //       "undefined" should not be thought of as a value, but as a way
 //       of telling the compiler that you are not assigning a value
-//       _yet_. Any type may be set to undefined, but attempting
-//       to read or use that value is _always_ a mistake.
+//       _yet_. Any variable may be set to undefined, but attempting to
+//       read its value before assigning one _always_ a mistake.
 //
 // * null
 //
@@ -24,7 +24,7 @@
 //       The "null" primitive value _is_ a value that means "no value".
 //       This is typically used with optional types as with the ?u8
 //       shown above. When foo equals null, that's not a value of type
-//       u8. It means there is _no value_ of type u8 in foo at all!
+//       u8. It means you have assigned foo to have _no value_!
 //
 // * error
 //
@@ -32,10 +32,9 @@
 //
 //       Errors are _very_ similar to nulls. They _are_ a value, but
 //       they usually indicate that the "real value" you were looking
-//       for does not exist. Instead, you have an error. The example
-//       error union type of MyError!u8 means that foo either holds
-//       a u8 value OR an error. There is _no value_ of type u8 in foo
-//       when it's set to an error!
+//       for does not exist. Instead of "no value", you have an error.
+//       The example error union type of MyError!u8 means that foo
+//       either holds a u8 value OR a MyError error.
 //
 // * void
 //
@@ -55,7 +54,7 @@
 //   * undefined - there is no value YET, this cannot be read YET
 //   * null      - there is an explicit value of "no value"
 //   * errors    - there is no value because something went wrong
-//   * void      - there will NEVER be a value stored here
+//   * void      - there will NEVER be a value here
 //
 // Please use the correct "no value" for each ??? to make this program
 // print out a cursed quote from the Necronomicon. ...If you dare.
