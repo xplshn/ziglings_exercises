@@ -15,7 +15,7 @@
 //       "undefined" should not be thought of as a value, but as a way
 //       of telling the compiler that you are not assigning a value
 //       _yet_. Any variable may be set to undefined, but attempting to
-//       read its value before assigning one _always_ a mistake.
+//       read its value before assigning one is _always_ a mistake.
 //
 // * null
 //
