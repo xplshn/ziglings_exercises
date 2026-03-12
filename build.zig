@@ -1309,6 +1309,14 @@ const exercises = [_]Exercise{
     \\= 0110
     },
     .{
+        .main_file = "111_packed.zig",
+        .output = "",
+    },
+    .{
+        .main_file = "112_packed2.zig",
+        .output = "",
+    },
+    .{
         .main_file = "999_the_end.zig",
         .output =
         \\
