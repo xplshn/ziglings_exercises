@@ -265,7 +265,7 @@ pub fn build(b: *Build) !void {
 
         const progress_file_size = try progress_file.length(io);
 
-        var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+        var gpa = std.heap.DebugAllocator(.{}){};
         defer _ = gpa.deinit();
         const allocator = gpa.allocator();
         const contents = try allocator.alloc(u8, progress_file_size);
@@ -1307,6 +1307,14 @@ const exercises = [_]Exercise{
     \\  0111 // (reset state)
     \\& 1110 // (bitmask)
     \\= 0110
+    },
+    .{
+        .main_file = "111_packed.zig",
+        .output = "",
+    },
+    .{
+        .main_file = "112_packed2.zig",
+        .output = "",
     },
     .{
         .main_file = "999_the_end.zig",
