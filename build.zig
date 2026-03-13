@@ -265,7 +265,7 @@ pub fn build(b: *Build) !void {
 
         const progress_file_size = try progress_file.length(io);
 
-        var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+        var gpa = std.heap.DebugAllocator(.{}){};
         defer _ = gpa.deinit();
         const allocator = gpa.allocator();
         const contents = try allocator.alloc(u8, progress_file_size);
