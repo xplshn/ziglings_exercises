@@ -4,7 +4,7 @@
 //     var foo: u8 = 5;      // foo is 5
 //     var bar: *u8 = &foo;  // bar is a pointer
 //
-// What is a pointer? It's a reference to a value. In this example
+// What is a pointer? It's a reference to a value. In this example,
 // bar is a reference to the memory space that currently contains the
 // value 5.
 //

@@ -11,7 +11,7 @@
 // format string can be checked for errors at compile time rather
 // than crashing at runtime.
 //
-// (The actual formatting is done by std.fmt.format() and it
+// (The actual formatting is done by std.Io.Writer.print() and it
 // contains a complete format string parser that runs entirely at
 // compile time!)
 //

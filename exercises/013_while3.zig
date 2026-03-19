@@ -11,8 +11,8 @@
 //
 //     }
 //
-// The "continue expression" executes every time the loop restarts
-// whether the "continue" statement happens or not.
+// The "continue expression" executes every single time the loop restarts,
+// even when a `continue` statement skips the rest of the loop body.
 //
 const std = @import("std");
 

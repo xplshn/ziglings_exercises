@@ -28,6 +28,8 @@
 //     0..10 is a range from 0 to 9
 //     1..4  is a range from 1 to 3
 //
+//     Crucially, the end value is EXCLUSIVE.
+//
 // At the moment, ranges in loops are only supported in 'for' loops.
 //
 // Perhaps you recall Exercise 13? We were printing a numeric
@@ -63,6 +65,12 @@ pub fn main() void {
         std.debug.print("{} ", .{n});
     }
 
+    std.debug.print("\n", .{});
+
+    // Let's also print every number from 1 through 15
+    for (???) |n| {
+        std.debug.print("{} ", .{n});
+    }
     std.debug.print("\n", .{});
 }
 //

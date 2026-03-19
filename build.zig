@@ -265,7 +265,7 @@ pub fn build(b: *Build) !void {
 
         const progress_file_size = try progress_file.length(io);
 
-        var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+        var gpa = std.heap.DebugAllocator(.{}){};
         defer _ = gpa.deinit();
         const allocator = gpa.allocator();
         const contents = try allocator.alloc(u8, progress_file_size);
@@ -278,7 +278,8 @@ pub fn build(b: *Build) !void {
             return error.UnexpectedEOF;
         }
 
-        starting_exercise = try std.fmt.parseInt(u32, contents, 10);
+        const trimmed_contents = std.mem.trim(u8, contents, "\r\n");
+        starting_exercise = try std.fmt.parseInt(u32, trimmed_contents, 10);
     } else |err| {
         switch (err) {
             std.Io.File.OpenError.FileNotFound => {
@@ -1146,7 +1147,7 @@ const exercises = [_]Exercise{
     },
     .{
         .main_file = "095_for3.zig",
-        .output = "1 2 4 7 8 11 13 14 16 17 19",
+        .output = "1 2 4 7 8 11 13 14 16 17 19\n1 2 3 4 5 6 7 8 9 10 11 12 13 14 15",
     },
     .{
         .main_file = "096_memory_allocation.zig",
@@ -1306,6 +1307,14 @@ const exercises = [_]Exercise{
     \\  0111 // (reset state)
     \\& 1110 // (bitmask)
     \\= 0110
+    },
+    .{
+        .main_file = "111_packed.zig",
+        .output = "",
+    },
+    .{
+        .main_file = "112_packed2.zig",
+        .output = "",
     },
     .{
         .main_file = "999_the_end.zig",

@@ -2,7 +2,7 @@
 // The functionality of the standard library is becoming increasingly
 // important in Zig. First of all, it is helpful to take a look at how
 // the individual functions are implemented. Because this is wonderfully
-// suitable as a template for your own functions. In addition these
+// suitable as a template for your own functions. In addition, these
 // standard functions are part of the basic configuration of Zig.
 //
 // This means that they are always available on every system.
@@ -24,8 +24,7 @@
 // suited to understand the basic principles.
 //
 // In the following exercises we will also read and process data from
-// large files and at the latest then it will be clear to everyone how
-// useful all this is.
+// large files, it will then be clearer to you how useful all this is.
 //
 // Let's start with the analysis of the example from the Zig homepage
 // and explain the most important things.

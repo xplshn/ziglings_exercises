@@ -1,6 +1,6 @@
---- exercises/095_for3.zig	2023-10-03 22:15:22.125574535 +0200
-+++ answers/095_for3.zig	2023-10-05 20:04:07.272770937 +0200
-@@ -54,7 +54,7 @@
+--- exercises/095_for3.zig	2026-02-27 19:33:59
++++ answers/095_for3.zig	2026-02-27 19:33:38
+@@ -56,7 +56,7 @@
  
      // I want to print every number between 1 and 20 that is NOT
      // divisible by 3 or 5.
@@ -9,3 +9,12 @@
  
          // The '%' symbol is the "modulo" operator and it
          // returns the remainder after division.
+@@ -68,7 +68,7 @@
+     std.debug.print("\n", .{});
+ 
+     // Let's also print every number from 1 through 15
+-    for (???) |n| {
++    for (1..16) |n| {
+         std.debug.print("{} ", .{n});
+     }
+     std.debug.print("\n", .{});

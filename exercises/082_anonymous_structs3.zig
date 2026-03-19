@@ -118,6 +118,10 @@ fn printTuple(tuple: anytype) void {
         //         @field(foo, "x"); // returns the value at foo.x
         //
         // The first field should print as: "0"(bool):true
+        //
+        // Hint: Be careful! If your 'lhs' is a type, @field() looks
+        // for declarations. If it's a value, it looks for data.
+        //
         print("\"{s}\"({any}):{any} ", .{
             field.???,
             field.???,
