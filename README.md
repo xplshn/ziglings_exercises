@@ -31,7 +31,7 @@ for more details:
 * https://ziglang.org/documentation/master/
 * [Zig in Depth! (video series)](https://www.youtube.com/watch?v=MMtvGA1YhW4&list=PLtB7CL7EG7pCw7Xy1SQC53Gl8pI7aDg9t&pp=iAQB)
 
-Also, the [Zig community](https://github.com/ziglang/zig/wiki/Community)
+Also, the [Zig community](https://ziglang.org/community/)
 is incredibly friendly and helpful!
 
 ## Getting Started
@@ -77,61 +77,14 @@ stable release was `0.15.2`, but Ziglings needs a dev build with
 pre-release version "0.16.0" and a build number at least as high
 as that shown in the example version check above.
 
+**Hint**: You can find a version change summary at the end of this README.
+
 It is likely that you'll download a build which is _greater_ than
 the minimum.
 
 Once you have a build of the Zig compiler that works with
 Ziglings, they'll continue to work together. But keep in mind
 that if you update one, you may need to also update the other.
-
-
-### Version Changes
-
-* 2026-03-20 zig 0.16.0-dev.2915 - `GeneralPurposeAllocator` was changed to `DebugAllocator`
-* 2026-02-04 zig 0.16.0-dev.2471 - added process.Child.Cwd, see [#31090](https://codeberg.org/ziglang/zig/pulls/31090)
-* 2026-01-09 zig 0.16.0-dev.2075 - move randomness API to `std.Io`, see [#30709](https://codeberg.org/ziglang/zig/pulls/30709)
-* 2026-01-07 zig 0.16.0-dev.2040 - adjust temp files, see [#30683](https://codeberg.org/ziglang/zig/pulls/30683)
-* 2026-01-06 zig 0.16.0-dev.1976 - move process API to `std.Io` and changes to main/environ/argv, see [#30644](https://codeberg.org/ziglang/zig/pulls/30644)
-* *2025-12-28* zig 0.16.0-dev.1859 - file system I/O integrated with the std.Io interface, see [#30232](https://codeberg.org/ziglang/zig/pulls/30232)
-* *2025-11-01* zig 0.16.0-dev.1204 - more changes due to new I/O API, see [#25592](https://github.com/ziglang/zig/pull/25592)
-* *2025-09-24* zig 0.16.0-dev.377 - Enable passing file content as args, see [#25228](https://github.com/ziglang/zig/pull/25228)
-* *2025-09-03* zig 0.16.0-dev.164 - changes in reader, see [#25077](https://github.com/ziglang/zig/pull/25077)
-* *2025-08-15* zig 0.15.0-dev.1519 - changes in array list, see [#24801](https://github.com/ziglang/zig/pull/24801)
-* *2025-08-08* zig 0.15.0-dev.1380 - changes in build system, see [#24588](https://github.com/ziglang/zig/pull/24588)
-* *2025-07-22* zig 0.15.0-dev.1092 - various changes due to new I/O API, see [#24488](https://github.com/ziglang/zig/pull/24488)
-* *2024-09-16* zig 0.14.0-dev.1573 - introduction of labeled switch, see [#21257](https://github.com/ziglang/zig/pull/21257)
-* *2024-09-02* zig 0.14.0-dev.1409 - several changes in std.builtin, see [#21225](https://github.com/ziglang/zig/pull/21225)
-* *2024-08-04* zig 0.14.0-dev.1224 - several changes in build system, see [#21115](https://github.com/ziglang/zig/pull/21115)
-* *2024-08-04* zig 0.14.0-dev.839 - several changes in build system, see [#20580](https://github.com/ziglang/zig/pull/20580), [#20600](https://github.com/ziglang/zig/issues/20600)
-* *2024-06-17* zig 0.14.0-dev.42 - changes in `std.mem.split and tokenize` - see [#15579](https://github.com/ziglang/zig/pull/15579)
-* *2024-05-29* zig 0.13.0-dev.339 - rework std.Progress - see [#20059](https://github.com/ziglang/zig/pull/20059)
-* *2024-03-21* zig 0.12.0-dev.3518 - change to @fieldParentPtr - see [#19470](https://github.com/ziglang/zig/pull/19470)
-* *2024-03-21* zig 0.12.0-dev.3397 - rename std.os to std.posix - see [#5019](https://github.com/ziglang/zig/issues/5019)
-* *2024-03-14* zig 0.12.0-dev.3302 - changes in `std.fmt` - floating-point formatting implementation - see [#19229](https://github.com/ziglang/zig/pull/19229)
-* *2024-02-05* zig 0.12.0-dev.2618 - changes in `build system` - from `Step.zig_exe` to `Step.graph.zig_exe` - see [#18778](https://github.com/ziglang/zig/issues/18778)
-* *2024-01-05* zig 0.12.0-dev.2043 - rename of `std.Build.FileSource` to `std.Build.LazyPath` - see [#16353](https://github.com/ziglang/zig/issues/16353)
-* *2023-10-24* zig 0.12.0-dev.1243 - changes in `std.ChildProcess`: renamed exec to run - see [#5853](https://github.com/ziglang/zig/issues/5853)
-* *2023-06-26* zig 0.11.0-dev.4246 - changes in compile step (now it can be null)
-* *2023-06-26* zig 0.11.0-dev.3853 - removal of destination type from all cast builtins
-* *2023-06-20* zig 0.11.0-dev.3747 - `@enumToInt` is now `@intFromEnum` and `@intToFloat` is now `@floatFromInt`
-* *2023-05-25* zig 0.11.0-dev.3295 - `std.debug.TTY` is now `std.io.tty`
-* *2023-04-30* zig 0.11.0-dev.2704 - use of the new `std.Build.ExecutableOptions.link_libc` field
-* *2023-04-12* zig 0.11.0-dev.2560 - changes in `std.Build` - remove run() and install()
-* *2023-04-07* zig 0.11.0-dev.2401 - fixes of the new build system - see [#212](https://github.com/ratfactor/ziglings/pull/212)
-* *2023-02-21* zig 0.11.0-dev.2157 - changes in `build system` - new: parallel processing of the build steps
-* *2023-02-21* zig 0.11.0-dev.1711 - changes in `for loops` - new: Multi-Object For-Loops + Struct-of-Arrays
-* *2023-02-12* zig 0.11.0-dev.1638 - changes in `std.Build` cache_root now returns a directory struct
-* *2023-02-04* zig 0.11.0-dev.1568 - changes in `std.Build` (combine `std.build` and `std.build.Builder` into `std.Build`)
-* *2023-01-14* zig 0.11.0-dev.1302 - changes in `@addWithOverflow` (now returns a tuple) and `@typeInfo`; temporary disabled async functionality
-* *2022-09-09* zig 0.10.0-dev.3978 - change in `NativeTargetInfo.detect` in build
-* *2022-09-06* zig 0.10.0-dev.3880 - Ex 074 correctly fails again: comptime array len
-* *2022-08-29* zig 0.10.0-dev.3685 - `@typeName()` output change, stage1 req. for async
-* *2022-07-31* zig 0.10.0-dev.3385 - std lib string `fmt()` option changes
-* *2022-03-19* zig 0.10.0-dev.1427 - method for getting sentinel of type changed
-* *2021-12-20* zig 0.9.0-dev.2025 - `c_void` is now `anyopaque`
-* *2021-06-14* zig 0.9.0-dev.137  - std.build.Id `.Custom` is now `.custom`
-* *2021-04-21* zig 0.8.0-dev.1983 - std.fmt.format() `any` format string required
-* *2021-02-12* zig 0.8.0-dev.1065 - std.fmt.format() `s` (string) format string required
 
 ## Advanced Usage
 
@@ -256,6 +209,54 @@ Zig Standard Library
 * [X] Tokenization
 * [X] File handling
 
+### Version Changes
+
+* 2026-03-20 zig 0.16.0-dev.2915 - `GeneralPurposeAllocator` was changed to `DebugAllocator`
+* 2026-02-04 zig 0.16.0-dev.2471 - added process.Child.Cwd, see [#31090](https://codeberg.org/ziglang/zig/pulls/31090)
+* 2026-01-09 zig 0.16.0-dev.2075 - move randomness API to `std.Io`, see [#30709](https://codeberg.org/ziglang/zig/pulls/30709)
+* 2026-01-07 zig 0.16.0-dev.2040 - adjust temp files, see [#30683](https://codeberg.org/ziglang/zig/pulls/30683)
+* 2026-01-06 zig 0.16.0-dev.1976 - move process API to `std.Io` and changes to main/environ/argv, see [#30644](https://codeberg.org/ziglang/zig/pulls/30644)
+* *2025-12-28* zig 0.16.0-dev.1859 - file system I/O integrated with the std.Io interface, see [#30232](https://codeberg.org/ziglang/zig/pulls/30232)
+* *2025-11-01* zig 0.16.0-dev.1204 - more changes due to new I/O API, see [#25592](https://github.com/ziglang/zig/pull/25592)
+* *2025-09-24* zig 0.16.0-dev.377 - Enable passing file content as args, see [#25228](https://github.com/ziglang/zig/pull/25228)
+* *2025-09-03* zig 0.16.0-dev.164 - changes in reader, see [#25077](https://github.com/ziglang/zig/pull/25077)
+* *2025-08-15* zig 0.15.0-dev.1519 - changes in array list, see [#24801](https://github.com/ziglang/zig/pull/24801)
+* *2025-08-08* zig 0.15.0-dev.1380 - changes in build system, see [#24588](https://github.com/ziglang/zig/pull/24588)
+* *2025-07-22* zig 0.15.0-dev.1092 - various changes due to new I/O API, see [#24488](https://github.com/ziglang/zig/pull/24488)
+* *2024-09-16* zig 0.14.0-dev.1573 - introduction of labeled switch, see [#21257](https://github.com/ziglang/zig/pull/21257)
+* *2024-09-02* zig 0.14.0-dev.1409 - several changes in std.builtin, see [#21225](https://github.com/ziglang/zig/pull/21225)
+* *2024-08-04* zig 0.14.0-dev.1224 - several changes in build system, see [#21115](https://github.com/ziglang/zig/pull/21115)
+* *2024-08-04* zig 0.14.0-dev.839 - several changes in build system, see [#20580](https://github.com/ziglang/zig/pull/20580), [#20600](https://github.com/ziglang/zig/issues/20600)
+* *2024-06-17* zig 0.14.0-dev.42 - changes in `std.mem.split and tokenize` - see [#15579](https://github.com/ziglang/zig/pull/15579)
+* *2024-05-29* zig 0.13.0-dev.339 - rework std.Progress - see [#20059](https://github.com/ziglang/zig/pull/20059)
+* *2024-03-21* zig 0.12.0-dev.3518 - change to @fieldParentPtr - see [#19470](https://github.com/ziglang/zig/pull/19470)
+* *2024-03-21* zig 0.12.0-dev.3397 - rename std.os to std.posix - see [#5019](https://github.com/ziglang/zig/issues/5019)
+* *2024-03-14* zig 0.12.0-dev.3302 - changes in `std.fmt` - floating-point formatting implementation - see [#19229](https://github.com/ziglang/zig/pull/19229)
+* *2024-02-05* zig 0.12.0-dev.2618 - changes in `build system` - from `Step.zig_exe` to `Step.graph.zig_exe` - see [#18778](https://github.com/ziglang/zig/issues/18778)
+* *2024-01-05* zig 0.12.0-dev.2043 - rename of `std.Build.FileSource` to `std.Build.LazyPath` - see [#16353](https://github.com/ziglang/zig/issues/16353)
+* *2023-10-24* zig 0.12.0-dev.1243 - changes in `std.ChildProcess`: renamed exec to run - see [#5853](https://github.com/ziglang/zig/issues/5853)
+* *2023-06-26* zig 0.11.0-dev.4246 - changes in compile step (now it can be null)
+* *2023-06-26* zig 0.11.0-dev.3853 - removal of destination type from all cast builtins
+* *2023-06-20* zig 0.11.0-dev.3747 - `@enumToInt` is now `@intFromEnum` and `@intToFloat` is now `@floatFromInt`
+* *2023-05-25* zig 0.11.0-dev.3295 - `std.debug.TTY` is now `std.io.tty`
+* *2023-04-30* zig 0.11.0-dev.2704 - use of the new `std.Build.ExecutableOptions.link_libc` field
+* *2023-04-12* zig 0.11.0-dev.2560 - changes in `std.Build` - remove run() and install()
+* *2023-04-07* zig 0.11.0-dev.2401 - fixes of the new build system - see [#212](https://github.com/ratfactor/ziglings/pull/212)
+* *2023-02-21* zig 0.11.0-dev.2157 - changes in `build system` - new: parallel processing of the build steps
+* *2023-02-21* zig 0.11.0-dev.1711 - changes in `for loops` - new: Multi-Object For-Loops + Struct-of-Arrays
+* *2023-02-12* zig 0.11.0-dev.1638 - changes in `std.Build` cache_root now returns a directory struct
+* *2023-02-04* zig 0.11.0-dev.1568 - changes in `std.Build` (combine `std.build` and `std.build.Builder` into `std.Build`)
+* *2023-01-14* zig 0.11.0-dev.1302 - changes in `@addWithOverflow` (now returns a tuple) and `@typeInfo`; temporary disabled async functionality
+* *2022-09-09* zig 0.10.0-dev.3978 - change in `NativeTargetInfo.detect` in build
+* *2022-09-06* zig 0.10.0-dev.3880 - Ex 074 correctly fails again: comptime array len
+* *2022-08-29* zig 0.10.0-dev.3685 - `@typeName()` output change, stage1 req. for async
+* *2022-07-31* zig 0.10.0-dev.3385 - std lib string `fmt()` option changes
+* *2022-03-19* zig 0.10.0-dev.1427 - method for getting sentinel of type changed
+* *2021-12-20* zig 0.9.0-dev.2025 - `c_void` is now `anyopaque`
+* *2021-06-14* zig 0.9.0-dev.137  - std.build.Id `.Custom` is now `.custom`
+* *2021-04-21* zig 0.8.0-dev.1983 - std.fmt.format() `any` format string required
+* *2021-02-12* zig 0.8.0-dev.1065 - std.fmt.format() `s` (string) format string required
+
 ## Contributing
 
 Contributions are very welcome! I'm writing this to teach myself
@@ -268,3 +269,4 @@ tons of room for improvement:
 
 Please see [CONTRIBUTING](https://codeberg.org/ziglings/exercises/src/branch/main/CONTRIBUTING.md)
 in this repo for the full details.
+
