@@ -1,29 +1,50 @@
 //
-// Because they can suspend and resume, async Zig functions are
-// an example of a more general programming concept called
-// "coroutines". One of the neat things about Zig async functions
-// is that they retain their state as they are suspended and
-// resumed.
+// The real power of async shows when you launch MULTIPLE tasks!
 //
-// See if you can make this program print "5 4 3 2 1".
+// With io.async(), you can start several operations, then await
+// them all. The Io backend may run them concurrently:
 //
-const print = @import("std").debug.print;
+//     var f1 = io.async(taskA, .{});
+//     var f2 = io.async(taskB, .{});
+//
+//     // Both tasks may be running now!
+//     const a = f1.await(io);
+//     const b = f2.await(io);
+//
+// There's also io.concurrent() which provides a STRONGER guarantee:
+// it ensures the function gets its own unit of concurrency (e.g. a
+// real OS thread). But it can fail with error.ConcurrencyUnavailable
+// if resources are exhausted.
+//
+// io.async() is more portable: if no thread is available, it simply
+// runs the function synchronously. This makes it the right default
+// for most code.
+//
+// Fix this program to launch both tasks and collect their results.
+//
+const std = @import("std");
+const print = std.debug.print;
 
-pub fn main() void {
-    const n = 5;
-    var foo_frame = async foo(n);
+pub fn main(init: std.process.Init) !void {
+    const io = init.io;
 
-    ???
+    // Launch both tasks asynchronously.
+    var future_a = io.async(slowAdd, .{ 10, 20 });
+    var future_b = ???(slowMul, .{ 6, 7 });
 
-    print("\n", .{});
+    // Await both results.
+    const sum = future_a.await(io);
+    const product = future_b.???(io);
+
+    print("{} + {} = {}\n", .{ 1, 2, sum });
+    print("{} * {} = {}\n", .{ 6, 7, product });
+    print("Total: {}\n", .{sum + product});
 }
 
-fn foo(countdown: u32) void {
-    var current = countdown;
+fn slowAdd(a: u32, b: u32) u32 {
+    return a + b;
+}
 
-    while (current > 0) {
-        print("{} ", .{current});
-        current -= 1;
-        suspend {}
-    }
+fn slowMul(a: u32, b: u32) u32 {
+    return a * b;
 }

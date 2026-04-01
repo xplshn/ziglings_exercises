@@ -1116,9 +1116,6 @@ const exercises = [_]Exercise{
         .main_file = "084_async.zig",
         .output = "Current time: <timestamp>s since epoch",
         .timestamp = true,
-        // .hint = "Read the facts. Use the facts.",
-        // .skip = true,
-        // .skip_hint = "async has not been implemented in the current compiler version.",
     },
     .{
         .main_file = "085_async2.zig",
@@ -1126,9 +1123,11 @@ const exercises = [_]Exercise{
     },
     .{
         .main_file = "086_async3.zig",
-        .output = "5 4 3 2 1",
-        .skip = true,
-        .skip_hint = "async has not been implemented in the current compiler version.",
+        .output =
+        \\1 + 2 = 3
+        \\6 * 7 = 42
+        \\Total: 45
+        , // pay attention to the comma
     },
     .{
         .main_file = "087_async4.zig",
