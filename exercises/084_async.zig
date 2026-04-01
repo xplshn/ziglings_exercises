@@ -1,58 +1,48 @@
 //
-// Six Facts:
+// In previous versions of Zig, async/await used special keywords
+// like 'suspend', 'resume', and 'async' that operated on stackframes
+// directly. Those keywords no longer exist!
 //
-// 1. The memory space allocated to your program for the
-// invocation of a function and all of its data is called a
-// "stack frame".
+// Zig 0.16 replaced them with a unified I/O interface: std.Io.
+// This interface uses a VTable pattern - a struct of function pointers -
+// to abstract over different concurrency backends:
 //
-// 2. The 'return' keyword "pops" the current function
-// invocation's frame off of the stack (it is no longer needed)
-// and returns control to the place where the function was
-// called.
+//   * Threaded  - classic thread-pool based I/O
+//   * Uring     - Linux io_uring
+//   * Kqueue    - BSD/macOS
+//   * Dispatch  - macOS Grand Central Dispatch
 //
-//     fn foo() void {
-//         return; // Pop the frame and return control
+// The Io struct itself is tiny:
+//
+//     const Io = struct {
+//         userdata: ?*anyopaque,   // opaque state of the backend
+//         vtable: *const VTable,   // table of function pointers
+//     };
+//
+// Your code receives an Io value and calls methods on it.
+// The backend is chosen at initialization time - your code doesn't
+// need to know which one it is!
+//
+// In Zig 0.16, main() receives a std.process.Init struct to opt
+// into I/O and concurrency support:
+//
+//     pub fn main(init: std.process.Init) !void {
+//         const io = init.io;
+//         // ... use io ...
 //     }
 //
-// 3. Like 'return', the 'suspend' keyword returns control to the
-// place where the function was called BUT the function
-// invocation's frame remains so that it can regain control again
-// at a later time. Functions which do this are "async"
-// functions.
+// Let's start simple. Fix the main function to extract the Io
+// interface from init, then use it to get the current time.
 //
-//     fn fooThatSuspends() void {
-//         suspend {} // return control, but leave the frame alone
-//     }
-//
-// 4. To call any function in async context and get a reference
-// to its frame for later use, use the 'async' keyword:
-//
-//     var foo_frame = async fooThatSuspends();
-//
-// 5. If you call an async function without the 'async' keyword,
-// the function FROM WHICH you called the async function itself
-// becomes async! In this example, the bar() function is now
-// async because it calls fooThatSuspends(), which is async.
-//
-//     fn bar() void {
-//         fooThatSuspends();
-//     }
-//
-// 6. The main() function cannot be async!
-//
-// Given facts 3 and 4, how do we fix this program (broken by facts
-// 5 and 6)?
-//
-const print = @import("std").debug.print;
+const std = @import("std");
 
-pub fn main() void {
-    // Additional Hint: you can assign things to '_' when you
-    // don't intend to do anything with them.
-    foo();
-}
+pub fn main(init: std.process.Init) !void {
+    const io = init.???;
 
-fn foo() void {
-    print("foo() A\n", .{});
-    suspend {}
-    print("foo() B\n", .{});
+    // Get the current wall-clock time using the Io interface.
+    // Hint: Timestamp.now() takes an Io and a Clock type (.real = wall clock).
+    const timestamp = std.Io.Timestamp.now(io, .real);
+
+    // Print the timestamp in seconds since the Unix epoch.
+    std.debug.print("Current time: {}s since epoch\n", .{timestamp.toSeconds()});
 }

@@ -1,28 +1,48 @@
 //
-// So, 'suspend' returns control to the place from which it was
-// called (the "call site"). How do we give control back to the
-// suspended function?
+// Now that we know how to get an Io value, let's use it for
+// asynchronous execution!
 //
-// For that, we have a new keyword called 'resume' which takes an
-// async function invocation's frame and returns control to it.
+// io.async() launches a function and returns a Future. The result
+// won't necessarily be available until you call .await() on it:
 //
-//     fn fooThatSuspends() void {
-//         suspend {}
-//     }
+//     var future = io.async(someFunction, .{ arg1, arg2 });
+//     // ... do other work here ...
+//     const result = future.await(io);
 //
-//     var foo_frame = async fooThatSuspends();
-//     resume foo_frame;
+// The function *may* run immediately or on another thread -
+// your code doesn't need to care! That's the beauty of the
+// Io abstraction. (In the Threaded backend, if no thread is
+// available, the function runs synchronously right away and
+// .await() just returns the already-computed result.)
 //
-// See if you can make this program print "Hello async!".
+// io.async() returns a Future(T) where T is the return type
+// of the function you passed in. Future has two key methods:
 //
-const print = @import("std").debug.print;
+//     .await(io)  - block until the result is ready, return it
+//     .cancel(io) - request cancellation, then return the result
+//
+// Fix this program so that computeAnswer runs asynchronously
+// and its result is properly awaited.
+//
+const std = @import("std");
 
-pub fn main() void {
-    var foo_frame = async foo();
+pub fn main(init: std.process.Init) !void {
+    const io = init.io;
+
+    // Launch computeAnswer asynchronously.
+    // io.async() takes a function and a tuple of its arguments.
+    var future = io.async(computeAnswer, .{ 6, 7 });
+
+    // Meanwhile, print something to show we're not blocked.
+    std.debug.print("Computing... ", .{});
+
+    // Now collect the result. What method on Future gives us
+    // the value, blocking if it isn't ready yet?
+    const answer = future.???(io);
+
+    std.debug.print("The answer is: {}\n", .{answer});
 }
 
-fn foo() void {
-    print("Hello ", .{});
-    suspend {}
-    print("async!\n", .{});
+fn computeAnswer(a: u32, b: u32) u32 {
+    return a * b;
 }

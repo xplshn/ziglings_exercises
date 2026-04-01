@@ -75,6 +75,8 @@ pub const Exercise = struct {
     /// Hint to the user, why this has been skipped
     skip_hint: ?[]const u8 = null,
 
+    timestamp: bool = false,
+
     /// Returns the name of the main file with .zig stripped.
     pub fn name(self: Exercise) []const u8 {
         return std.fs.path.stem(self.main_file);
@@ -435,11 +437,30 @@ const ZiglingStep = struct {
             result.stderr;
 
         // Validate the output.
+        var exercise_output = self.exercise.output;
+
+        // Insert timestamp for exercise 84
+        if (self.exercise.timestamp) {
+            var ts_buf: [20]u8 = undefined;
+            const timestamp = std.fmt.bufPrint(&ts_buf, "{}", .{std.Io.Timestamp.now(io, .real).toSeconds()}) catch unreachable;
+
+            var buf: [100]u8 = undefined;
+            const prefix_len = 14;
+            const placeholder_len = 11;
+            @memcpy(buf[0..prefix_len], exercise_output[0..prefix_len]);
+            @memcpy(buf[prefix_len..][0..timestamp.len], timestamp);
+            const suffix = exercise_output[prefix_len + placeholder_len ..];
+            const suffix_dest_start = prefix_len + timestamp.len;
+            @memcpy(buf[suffix_dest_start..][0..suffix.len], suffix);
+
+            const total_len = prefix_len + timestamp.len + suffix.len;
+            exercise_output = buf[0..total_len];
+        }
+
         // NOTE: exercise.output can never contain a CR character.
         // See https://ziglang.org/documentation/master/#Source-Encoding.
         const output = trimLines(b.allocator, raw_output) catch @panic("OOM");
-        const exercise_output = self.exercise.output;
-        if (!std.mem.eql(u8, output, self.exercise.output)) {
+        if (!std.mem.eql(u8, output, exercise_output)) {
             const red = red_bold_text;
             const reset = reset_text;
 
@@ -698,7 +719,7 @@ const exercises = [_]Exercise{
         \\most part, you'll be taking directions from the Zig
         \\compiler itself.)
         \\
-        ,
+        , // pay attention to the comma
     },
     .{
         .main_file = "002_std.zig",
@@ -730,7 +751,7 @@ const exercises = [_]Exercise{
         \\Ziggy played guitar
         \\Jamming good with Andrew Kelley
         \\And the Spiders from Mars
-        ,
+        , // pay attention to the comma
         .hint = "Please fix the lyrics!",
     },
     .{
@@ -867,7 +888,7 @@ const exercises = [_]Exercise{
         \\  <span style="color: #00ff00">Green</span>
         \\  <span style="color: #0000ff">Blue</span>
         \\</p>
-        ,
+        , // pay attention to the comma
         .hint = "I'm feeling blue about this.",
     },
     .{
@@ -879,7 +900,7 @@ const exercises = [_]Exercise{
         .output =
         \\Character 1 - G:20 H:100 XP:10
         \\Character 2 - G:10 H:100 XP:20
-        ,
+        , // pay attention to the comma
     },
     .{
         .main_file = "039_pointers.zig",
@@ -903,7 +924,7 @@ const exercises = [_]Exercise{
         .output =
         \\Wizard (G:10 H:100 XP:20)
         \\  Mentor: Wizard (G:10000 H:100 XP:2340)
-        ,
+        , // pay attention to the comma
     },
     .{
         .main_file = "044_quiz5.zig",
@@ -947,7 +968,7 @@ const exercises = [_]Exercise{
         .output =
         \\Hand1: A 4 K 8
         \\Hand2: 5 2 Q J
-        ,
+        , // pay attention to the comma
     },
     .{
         .main_file = "053_slices2.zig",
@@ -1043,7 +1064,10 @@ const exercises = [_]Exercise{
         .main_file = "073_comptime8.zig",
         .output = "My llama value is 25.",
     },
-    .{ .main_file = "074_comptime9.zig", .output = "My llama value is 2.", .skip = false, .skip_hint = "This is actually correct as it is. :-)" },
+    .{
+        .main_file = "074_comptime9.zig",
+        .output = "My llama value is 2.",
+    },
     .{
         .main_file = "075_quiz8.zig",
         .output = "Archer's Point--2->Bridge--1->Dogwood Grove--3->Cottage--2->East Pond--1->Fox Pond",
@@ -1078,7 +1102,7 @@ const exercises = [_]Exercise{
         .main_file = "082_anonymous_structs3.zig",
         .output =
         \\"0"(bool):true "1"(bool):false "2"(i32):42 "3"(f32):3.141592
-        ,
+        , // pay attention to the comma
         .hint = "This one is a challenge! But you have everything you need.",
     },
     .{
@@ -1090,16 +1114,15 @@ const exercises = [_]Exercise{
     // direct link: https://github.com/ziglang/zig/issues/6025
     .{
         .main_file = "084_async.zig",
-        .output = "foo() A",
-        .hint = "Read the facts. Use the facts.",
-        .skip = true,
-        .skip_hint = "async has not been implemented in the current compiler version.",
+        .output = "Current time: <timestamp>s since epoch",
+        .timestamp = true,
+        // .hint = "Read the facts. Use the facts.",
+        // .skip = true,
+        // .skip_hint = "async has not been implemented in the current compiler version.",
     },
     .{
         .main_file = "085_async2.zig",
-        .output = "Hello async!",
-        .skip = true,
-        .skip_hint = "async has not been implemented in the current compiler version.",
+        .output = "Computing... the answer is: 42",
     },
     .{
         .main_file = "086_async3.zig",
@@ -1145,7 +1168,7 @@ const exercises = [_]Exercise{
         \\Ant is alive.
         \\Bee visited 17 flowers.
         \\Grasshopper hopped 32 meters.
-        ,
+        , // pay attention to the comma
     },
     .{
         .main_file = "093_hello_c.zig",
@@ -1221,7 +1244,7 @@ const exercises = [_]Exercise{
         \\2. Bard (Gold: 11, XP: 17)
         \\3. Bard (Gold: 5, XP: 55)
         \\4. Warrior (Gold: 7392, XP: 21)
-        ,
+        , // pay attention to the comma
     },
     .{
         .main_file = "102_testing.zig",
@@ -1247,7 +1270,7 @@ const exercises = [_]Exercise{
         \\and
         \\despair
         \\This little poem has 15 words!
-        ,
+        , // pay attention to the comma
     },
     .{
         .main_file = "104_threading.zig",
@@ -1261,7 +1284,7 @@ const exercises = [_]Exercise{
         \\thread 1: finished.
         \\thread 3: finished.
         \\Zig is cool!
-        ,
+        , // pay attention to the comma
     },
     .{
         .main_file = "105_threading2.zig",
@@ -1276,7 +1299,7 @@ const exercises = [_]Exercise{
         .output =
         \\AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
         \\Successfully Read 18 bytes: It's zigling time!
-        ,
+        , // pay attention to the comma
     },
     .{
         .main_file = "108_labeled_switch.zig",
@@ -1287,7 +1310,7 @@ const exercises = [_]Exercise{
         .output =
         \\Max difference (old fn): 0.014
         \\Max difference (new fn): 0.014
-        ,
+        , // pay attention to the comma
     },
     .{ .main_file = "110_quiz9.zig", .output =
     \\Toggle pins with XOR on PORTB
@@ -1334,6 +1357,6 @@ const exercises = [_]Exercise{
         \\
         \\This is the end for now!
         \\We hope you had fun and were able to learn a lot, so visit us again when the next exercises are available.
-        ,
+        , // pay attention to the comma
     },
 };
