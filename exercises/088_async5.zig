@@ -1,48 +1,61 @@
 //
-// Sure, we can solve our async value problem with a global
-// variable. But this hardly seems like an ideal solution.
+// One of the most important features of the new Io system is
+// structured cancellation!
 //
-// So how do we REALLY get return values from async functions?
+// Every Future has a .cancel() method that:
+//   1. Requests the task to stop (via error.Canceled at the
+//      next "cancellation point")
+//   2. Waits for the task to actually finish
+//   3. Returns whatever result the task produced
 //
-// The 'await' keyword waits for an async function to complete
-// and then captures its return value.
+// A "cancellation point" is any Io function that can return
+// error.Canceled - most commonly io.sleep():
 //
-//     fn foo() u32 {
-//         return 5;
+//     fn myTask(io: std.Io) u32 {
+//         io.sleep(...) catch |err| switch (err) {
+//             error.Canceled => return 0,  // handle gracefully
+//         };
+//         return 42;
 //     }
 //
-//    var foo_frame = async foo(); // invoke and get frame
-//    var value = await foo_frame; // await result using frame
+// This is fundamentally different from killing a thread -
+// the task gets a chance to clean up and return a value!
 //
-// The above example is just a silly way to call foo() and get 5
-// back. But if foo() did something more interesting such as wait
-// for a network response to get that 5, our code would pause
-// until the value was ready.
+// Fix this program: the slow task would take 10 seconds,
+// but we cancel it after 1 second. The task should detect
+// the cancellation and return early.
 //
-// As you can see, async/await basically splits a function call
-// into two parts:
-//
-//    1. Invoke the function ('async')
-//    2. Getting the return value ('await')
-//
-// Also notice that a 'suspend' keyword does NOT need to exist in
-// a function to be called in an async context.
-//
-// Please use 'await' to get the string returned by
-// getPageTitle().
-//
-const print = @import("std").debug.print;
+const std = @import("std");
+const print = std.debug.print;
 
-pub fn main() void {
-    var myframe = async getPageTitle("http://example.com");
+pub fn main(init: std.process.Init) !void {
+    const io = init.io;
 
-    var value = ???
+    var future = io.async(slowTask, .{io});
 
-    print("{s}\n", .{value});
+    // Wait 1 second, then cancel instead of waiting the full 10.
+    io.sleep(std.Io.Duration.fromSeconds(1), .awake) catch {};
+
+    print("Canceling slow task...\n", .{});
+
+    // We don't want to wait 10 seconds!
+    // Which Future method requests cancellation AND returns the result?
+    const result = ???;
+
+    print("Task returned: {}\n", .{result});
 }
 
-fn getPageTitle(url: []const u8) []const u8 {
-    // Please PRETEND this is actually making a network request.
-    _ = url;
-    return "Example Title.";
+fn slowTask(io: std.Io) u32 {
+    print("Starting long computation...\n", .{});
+
+    // Try to sleep for 10 seconds - but we might get canceled!
+    io.sleep(std.Io.Duration.fromSeconds(10), .awake) catch |err| switch (err) {
+        error.Canceled => {
+            print("Task was canceled, cleaning up.\n", .{});
+            return 0;
+        },
+    };
+
+    print("Task completed normally.\n", .{});
+    return 42;
 }

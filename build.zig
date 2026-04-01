@@ -1140,9 +1140,12 @@ const exercises = [_]Exercise{
     },
     .{
         .main_file = "088_async5.zig",
-        .output = "Example Title.",
-        .skip = true,
-        .skip_hint = "async has not been implemented in the current compiler version.",
+        .output =
+        \\Starting long computation...
+        \\Canceling slow task...
+        \\Task was canceled, cleaning up.
+        \\Task returned: 0
+        , // pay attention to the comma
     },
     .{
         .main_file = "089_async6.zig",
