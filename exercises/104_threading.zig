@@ -1,31 +1,22 @@
 //
-// Whenever there is a lot to calculate, the question arises as to how
-// tasks can be carried out simultaneously. We have already learned about
-// one possibility, namely asynchronous processes, in Exercises 84-91.
+// In Exercises 84-91, we learned about Zig's Io interface for
+// concurrent execution: io.async(), Group, Select, and Futures.
+// Under the hood, the Threaded backend manages a pool of real
+// OS threads for you - including scheduling, cancellation, and
+// resource cleanup.
 //
-// However, the computing power of the processor is only distributed to
-// the started and running tasks, which always reaches its limits when
-// pure computing power is called up.
+// But sometimes you need direct control over threads:
+//   * Long-lived dedicated workers
+//   * Specific stack sizes or thread counts
+//   * Code that doesn't have an Io interface available
+//   * Fine-grained synchronization patterns
 //
-// For example, in blockchains based on proof of work, the miners have
-// to find a nonce for a certain character string so that the first m bits
-// in the hash of the character string and the nonce are zeros.
-// As the miner who can solve the task first receives the reward, everyone
-// tries to complete the calculations as quickly as possible.
+// That's where std.Thread comes in. It gives you a raw OS thread
+// that you spawn, manage, and join yourself. No pool, no Futures,
+// no automatic cancellation - but full control.
 //
-// This is where multithreading comes into play, where tasks are actually
-// distributed across several cores of the CPU or GPU, which then really
-// means a multiplication of performance.
-//
-// The following diagram roughly illustrates the difference between the
-// various types of process execution.
-// The 'Overall Time' column is intended to illustrate how the time is
-// affected if, instead of one core as in synchronous and asynchronous
-// processing, a second core now helps to complete the work in multithreading.
-//
-// In the ideal case shown, execution takes only half the time compared
-// to the synchronous single thread. And even asynchronous processing
-// is only slightly faster in comparison.
+// The following diagram roughly illustrates the difference between
+// the various types of process execution:
 //
 //
 // Synchronous  Asynchronous
@@ -108,7 +99,7 @@ pub fn main() !void {
         // they run in parallel and we can still do some work in between.
         var io_instance: std.Io.Threaded = .init_single_threaded;
         const io = io_instance.io();
-        try io.sleep(std.Io.Duration.fromSeconds(4), .awake);
+        try io.sleep(std.Io.Duration.fromMilliseconds(400), .awake);
         std.debug.print("Some weird stuff, after starting the threads.\n", .{});
     }
     // After we have left the closed area, we wait until
@@ -118,17 +109,17 @@ pub fn main() !void {
 
 // This function is started with every thread that we set up.
 // In our example, we pass the number of the thread as a parameter.
-fn thread_function(num: usize) !void {
+fn thread_function(id: usize) !void {
     var io_instance: std.Io.Threaded = .init_single_threaded;
     const io = io_instance.io();
-    try io.sleep(std.Io.Duration.fromSeconds(1 * @as(isize, @intCast(num))), .awake);
-    std.debug.print("thread {d}: {s}\n", .{ num, "started." });
+    try io.sleep(std.Io.Duration.fromMilliseconds(100 * @as(isize, @intCast(id))), .awake);
+    std.debug.print("thread {d}: {s}\n", .{ id, "started." });
 
     // This timer simulates the work of the thread.
-    const work_time = 3 * ((5 - num % 3) - 2);
-    try io.sleep(std.Io.Duration.fromSeconds(@intCast(work_time)), .awake);
+    const work_time = 300 * ((5 - id % 3) - 2);
+    try io.sleep(std.Io.Duration.fromMilliseconds(@intCast(work_time)), .awake);
 
-    std.debug.print("thread {d}: {s}\n", .{ num, "finished." });
+    std.debug.print("thread {d}: {s}\n", .{ id, "finished." });
 }
 // This is the easiest way to run threads in parallel.
 // In general, however, more management effort is required,

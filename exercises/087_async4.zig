@@ -1,30 +1,50 @@
 //
-// It has probably not escaped your attention that we are no
-// longer capturing a return value from foo() because the 'async'
-// keyword returns the frame instead.
+// When you have many tasks that don't return individual values,
+// use a Group! A Group is an unordered set of tasks that can
+// only be awaited or canceled as a whole:
 //
-// One way to solve this is to use a global variable.
+//     var group: std.Io.Group = .init;
+//     group.async(io, myTask, .{arg1});
+//     group.async(io, myTask, .{arg2});
+//     try group.await(io);  // blocks until ALL tasks finish
 //
-// See if you can make this program print "1 2 3 4 5".
+// Important rules:
+//   * The return type of functions spawned in a group must be
+//     coercible to Cancelable!void (i.e. void, or error{Canceled}!void).
+//   * Once you call group.async(), you MUST eventually call
+//     group.await() or group.cancel() to release resources.
+//   * group.cancel() requests cancellation on ALL members,
+//     then waits for them to finish.
 //
-const print = @import("std").debug.print;
+// Unlike Future, Group tasks don't return values to the caller.
+// They're ideal for parallel work that communicates through
+// shared state or side effects (like printing).
+//
+// Fix this program to await all tasks in the group.
+//
+const std = @import("std");
+const print = std.debug.print;
 
-var global_counter: i32 = 0;
+pub fn main(init: std.process.Init) !void {
+    const io = init.io;
 
-pub fn main() void {
-    var foo_frame = async foo();
+    var group: std.Io.Group = .init;
 
-    while (global_counter <= 5) {
-        print("{} ", .{global_counter});
-        ???
-    }
+    // Spawn 3 tasks in any order. Each sleeps for (id * 1) seconds
+    // before printing, so the output order is deterministic.
+    group.async(io, doWork, .{ io, 1 });
+    group.async(io, doWork, .{ io, 3 });
+    group.async(io, doWork, .{ io, 2 });
 
-    print("\n", .{});
+    // Wait for all tasks to finish.
+    // What Group method blocks until all tasks complete?
+    try group.???
+
+    print("All tasks finished!\n", .{});
 }
 
-fn foo() void {
-    while (true) {
-        ???
-        ???
-    }
+fn doWork(io: std.Io, id: u32) void {
+    // Sleep ensures deterministic output order.
+    io.sleep(std.Io.Duration.fromSeconds(id), .awake) catch return;
+    print("Task {} done.\n", .{id});
 }
