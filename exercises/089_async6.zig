@@ -1,54 +1,71 @@
 //
-// The power and purpose of async/await becomes more apparent
-// when we do multiple things concurrently. Foo and Bar do not
-// depend on each other and can happen at the same time, but End
-// requires that they both be finished.
+// Sometimes you want to race multiple tasks and act on whichever
+// finishes first. That's what Select is for!
 //
-//               +---------+
-//               |  Start  |
-//               +---------+
-//                  /    \
-//                 /      \
-//        +---------+    +---------+
-//        |   Foo   |    |   Bar   |
-//        +---------+    +---------+
-//                 \      /
-//                  \    /
-//               +---------+
-//               |   End   |
-//               +---------+
+// Select is like a Group, but lets you receive individual results
+// as tasks complete — one at a time:
 //
-// We can express this in Zig like so:
+//     const Race = std.Io.Select(union(enum) {
+//         fast: u32,
+//         slow: u32,
+//     });
 //
-//     fn foo() u32 { ... }
-//     fn bar() u32 { ... }
+//     var buffer: [2]Race.Union = undefined;
+//     var sel = Race.init(io, &buffer);
 //
-//     // Start
+//     sel.async(.fast, fastFn, .{io});
+//     sel.async(.slow, slowFn, .{io});
 //
-//     var foo_frame = async foo();
-//     var bar_frame = async bar();
+//     const winner = try sel.await();  // returns first completed
+//     switch (winner) {
+//         .fast => |val| ...,
+//         .slow => |val| ...,
+//     }
+//     sel.cancelDiscard();  // cancel remaining, discard results
 //
-//     var foo_value = await foo_frame;
-//     var bar_value = await bar_frame;
+// The buffer must be large enough for all tasks that might
+// complete before you call cancelDiscard().
 //
-//     // End
+// Fix this program to receive the winner of the race.
 //
-// Please await TWO page titles!
-//
-const print = @import("std").debug.print;
+const std = @import("std");
+const print = std.debug.print;
 
-pub fn main() void {
-    var com_frame = async getPageTitle("http://example.com");
-    var org_frame = async getPageTitle("http://example.org");
+const RaceResult = std.Io.Select(union(enum) {
+    hare: []const u8,
+    tortoise: []const u8,
+});
 
-    var com_title = com_frame;
-    var org_title = org_frame;
+pub fn main(init: std.process.Init) !void {
+    const io = init.io;
 
-    print(".com: {s}, .org: {s}.\n", .{ com_title, org_title });
+    var buffer: [2]RaceResult.Union = undefined;
+    var sel = RaceResult.init(io, &buffer);
+
+    sel.async(.hare, runHare, .{io});
+    sel.async(.tortoise, runTortoise, .{io});
+
+    // Wait for the first finisher.
+    // What Select method returns the first completed result?
+    const winner = ???;
+
+    switch (winner) {
+        .hare => |msg| print("Hare: {s}\n", .{msg}),
+        .tortoise => |msg| print("Tortoise: {s}\n", .{msg}),
+    }
+
+    // Clean up the loser — we don't need their result.
+    sel.cancelDiscard();
 }
 
-fn getPageTitle(url: []const u8) []const u8 {
-    // Please PRETEND this is actually making a network request.
-    _ = url;
-    return "Example Title";
+fn runHare(io: std.Io) []const u8 {
+    // The hare is fast — only 1 second!
+    io.sleep(std.Io.Duration.fromSeconds(1), .awake) catch return "I got canceled!";
+    return "I'm fast!";
+}
+
+fn runTortoise(io: std.Io) []const u8 {
+    // The tortoise is slow — 10 seconds.
+    io.sleep(std.Io.Duration.fromSeconds(10), .awake) catch return "I got canceled!";
+    return "Slow and steady...";
 }
