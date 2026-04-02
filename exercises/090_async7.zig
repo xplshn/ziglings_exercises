@@ -1,87 +1,57 @@
 //
-// Remember how a function with 'suspend' is async and calling an
-// async function without the 'async' keyword makes the CALLING
-// function async?
+// When multiple async tasks access shared data, you need
+// synchronization! Io provides a Mutex for this:
 //
-//     fn fooThatMightSuspend(maybe: bool) void {
-//         if (maybe) suspend {}
-//     }
+//     var mutex: std.Io.Mutex = .init;
 //
-//     fn bar() void {
-//         fooThatMightSuspend(true); // Now bar() is async!
-//     }
+//     // In a task:
+//     try mutex.lock(io);       // blocks until lock is acquired
+//     defer mutex.unlock();
+//     // ... critical section: safe to modify shared data ...
 //
-// But if you KNOW the function won't suspend, you can make a
-// promise to the compiler with the 'nosuspend' keyword:
+// Without the mutex, concurrent tasks could read and write the
+// same memory simultaneously, causing a data race — the result
+// would be unpredictable.
 //
-//     fn bar() void {
-//         nosuspend fooThatMightSuspend(false);
-//     }
+// mutex.lock() is a cancellation point — it can return
+// error.Canceled. There's also tryLock() which returns
+// immediately (true if acquired, false if not).
 //
-// If the function does suspend and YOUR PROMISE TO THE COMPILER
-// IS BROKEN, the program will panic at runtime, which is
-// probably better than you deserve, you oathbreaker! >:-(
+// Fix this program so the counter is correctly synchronized.
+// Without the fix, the final count would be unpredictable.
+// With it, four tasks incrementing 100 times each = 400.
 //
-const print = @import("std").debug.print;
+const std = @import("std");
+const print = std.debug.print;
 
-pub fn main() void {
+const SharedState = struct {
+    counter: u32 = 0,
+    mutex: std.Io.Mutex = .init,
+};
 
-    // The main() function can not be async. But we know
-    // getBeef() will not suspend with this particular
-    // invocation. Please make this okay:
-    var my_beef = getBeef(0);
+pub fn main(init: std.process.Init) !void {
+    const io = init.io;
+    var state = SharedState{};
 
-    print("beef? {X}!\n", .{my_beef});
+    var group: std.Io.Group = .init;
+
+    group.async(io, increment, .{ io, &state, 100 });
+    group.async(io, increment, .{ io, &state, 100 });
+    group.async(io, increment, .{ io, &state, 100 });
+    group.async(io, increment, .{ io, &state, 100 });
+
+    try group.await(io);
+
+    print("Counter: {} (expected: 400)\n", .{state.counter});
 }
 
-fn getBeef(input: u32) u32 {
-    if (input == 0xDEAD) {
-        suspend {}
+fn increment(io: std.Io, state: *SharedState, times: u32) void {
+    for (0..times) |_| {
+        // Acquire the lock before modifying shared state.
+        // What Mutex method blocks until the lock is acquired?
+        state.mutex.??? catch return;
+        defer state.mutex.unlock(); // <-- what's missing here?
+
+        state.counter += 1;
     }
-
-    return 0xBEEF;
 }
-//
-// Going Deeper Into...
-//                     ...uNdeFiNEd beHAVi0r!
-//
-// We haven't discussed it yet, but runtime "safety" features
-// require some extra instructions in your compiled program.
-// Most of the time, you're going to want to keep these in.
-//
-// But in some programs, when data integrity is less important
-// than raw speed (some games, for example), you can compile
-// without these safety features.
-//
-// Instead of a safe panic when something goes wrong, your
-// program will now exhibit Undefined Behavior (UB), which simply
-// means that the Zig language does not (cannot) define what will
-// happen. The best case is that it will crash, but in the worst
-// case, it will continue to run with the wrong results and
-// corrupt your data or expose you to security risks.
-//
-// This program is a great way to explore UB. Once you get it
-// working, try calling the getBeef() function with the value
-// 0xDEAD so that it will invoke the 'suspend' keyword:
-//
-//     getBeef(0xDEAD)
-//
-// Now when you run the program, it will panic and give you a
-// nice stack trace to help debug the problem.
-//
-//     zig run exercises/090_async7.zig
-//     thread 328 panic: async function called...
-//     ...
-//
-// But see what happens when you turn off safety checks by using
-// ReleaseFast mode:
-//
-//     zig run -O ReleaseFast exercises/090_async7.zig
-//     beef? 0!
-//
-// This is the wrong result. On your computer, you may get a
-// different answer or it might crash! What exactly will happen
-// is UNDEFINED. Your computer is now like a wild animal,
-// reacting to bits and bytes of raw memory with the base
-// instincts of the CPU. It is both terrifying and exhilarating.
-//

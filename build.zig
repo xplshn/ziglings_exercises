@@ -1149,15 +1149,11 @@ const exercises = [_]Exercise{
     },
     .{
         .main_file = "089_async6.zig",
-        .output = ".com: Example Title, .org: Example Title.",
-        .skip = true,
-        .skip_hint = "async has not been implemented in the current compiler version.",
+        .output = "Hare: I'm fast!",
     },
     .{
         .main_file = "090_async7.zig",
-        .output = "beef? BEEF!",
-        .skip = true,
-        .skip_hint = "async has not been implemented in the current compiler version.",
+        .output = "Counter: 400 (expected: 400)",
     },
     .{
         .main_file = "091_async8.zig",
