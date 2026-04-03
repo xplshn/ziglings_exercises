@@ -436,17 +436,29 @@ const ZiglingStep = struct {
         else
             result.stderr;
 
+        // NOTE: exercise.output can never contain a CR character.
+        // See https://ziglang.org/documentation/master/#Source-Encoding.
+        const output = trimLines(b.allocator, raw_output) catch @panic("OOM");
+
         // Validate the output.
         var exercise_output = self.exercise.output;
 
-        // Insert timestamp for exercise 84
+        // Insert timestamp for exercise 85
         if (self.exercise.timestamp) {
-            var ts_buf: [20]u8 = undefined;
-            const timestamp = std.fmt.bufPrint(&ts_buf, "{}", .{std.Io.Timestamp.now(io, .real).toSeconds()}) catch unreachable;
 
+            // Compare timestamp from exercise with now, diff < 5 seconds is valid
+            var ts_buf: [20]u8 = undefined;
+            const ts_slice = output[14..24];
+            const ts_value = try std.fmt.parseInt(i64, ts_slice, 10);
+            const ts_build = std.Io.Timestamp.now(io, .real).toSeconds();
+            const ts_diff = @abs(ts_build - ts_value);
+            const timestamp = std.fmt.bufPrint(&ts_buf, "{}", .{if (ts_diff < 5) ts_value else ts_build}) catch unreachable;
+
+            // Insert timestamp into check string
             var buf: [100]u8 = undefined;
             const prefix_len = 14;
             const placeholder_len = 11;
+
             @memcpy(buf[0..prefix_len], exercise_output[0..prefix_len]);
             @memcpy(buf[prefix_len..][0..timestamp.len], timestamp);
             const suffix = exercise_output[prefix_len + placeholder_len ..];
@@ -457,9 +469,6 @@ const ZiglingStep = struct {
             exercise_output = buf[0..total_len];
         }
 
-        // NOTE: exercise.output can never contain a CR character.
-        // See https://ziglang.org/documentation/master/#Source-Encoding.
-        const output = trimLines(b.allocator, raw_output) catch @panic("OOM");
         if (!std.mem.eql(u8, output, exercise_output)) {
             const red = red_bold_text;
             const reset = reset_text;
