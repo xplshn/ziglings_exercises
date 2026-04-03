@@ -1121,7 +1121,7 @@ const exercises = [_]Exercise{
     .{
         .main_file = "084_interfaces.zig",
         .output =
-        \\Daily Insect Report:
+        \\=== Doctor Zoraptera's Insect Report ===
         \\Ant is alive.
         \\Bee visited 17 flowers.
         \\Grasshopper hopped 32 meters.
