@@ -1,0 +1,11 @@
+--- exercises/087_async4.zig	2026-04-01 23:17:31.066443941 +0200
++++ answers/087_async4.zig	2026-04-01 23:17:39.251612131 +0200
+@@ -38,7 +38,7 @@
+ 
+     // Wait for all tasks to finish.
+     // What Group method blocks until all tasks complete?
+-    try group.???
++    try group.await(io);
+ 
+     print("All tasks finished!\n", .{});
+ }

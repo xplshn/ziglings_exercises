@@ -1,0 +1,14 @@
+--- exercises/085_async2.zig	2026-04-01 19:22:50.017227542 +0200
++++ answers/085_async2.zig	2026-04-01 19:21:57.569158481 +0200
+@@ -38,9 +38,9 @@
+ 
+     // Now collect the result. What method on Future gives us
+     // the value, blocking if it isn't ready yet?
+-    const answer = future.???(io);
++    const answer = future.await(io);
+ 
+-    std.debug.print("The answer is: {}\n", .{answer});
++    std.debug.print("the answer is: {}\n", .{answer});
+ }
+ 
+ fn computeAnswer(a: u32, b: u32) u32 {
