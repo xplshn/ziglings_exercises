@@ -1,0 +1,11 @@
+--- exercises/084_interfaces.zig	2025-08-15 15:17:57.839348063 +0200
++++ answers/084_interfaces.zig	2026-04-03 14:27:32.670756488 +0200
+@@ -106,7 +106,7 @@
+     for (my_insects) |insect| {
+         // Almost done! We want to print() each insect with a
+         // single method call here.
+-        ???
++        insect.print();
+     }
+ }
+ 

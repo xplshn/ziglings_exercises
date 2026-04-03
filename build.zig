@@ -1109,20 +1109,29 @@ const exercises = [_]Exercise{
         .main_file = "083_anonymous_lists.zig",
         .output = "I say hello!",
     },
+    .{
+        .main_file = "084_interfaces.zig",
+        .output =
+        \\Daily Insect Report:
+        \\Ant is alive.
+        \\Bee visited 17 flowers.
+        \\Grasshopper hopped 32 meters.
+        , // pay attention to the comma
+    },
 
     // Skipped because of https://github.com/ratfactor/ziglings/issues/163
     // direct link: https://github.com/ziglang/zig/issues/6025
     .{
-        .main_file = "084_async.zig",
+        .main_file = "085_async.zig",
         .output = "Current time: <timestamp>s since epoch",
         .timestamp = true,
     },
     .{
-        .main_file = "085_async2.zig",
+        .main_file = "086_async2.zig",
         .output = "Computing... the answer is: 42",
     },
     .{
-        .main_file = "086_async3.zig",
+        .main_file = "087_async3.zig",
         .output =
         \\1 + 2 = 3
         \\6 * 7 = 42
@@ -1130,7 +1139,7 @@ const exercises = [_]Exercise{
         , // pay attention to the comma
     },
     .{
-        .main_file = "087_async4.zig",
+        .main_file = "088_async4.zig",
         .output =
         \\Task 1 done.
         \\Task 2 done.
@@ -1139,7 +1148,7 @@ const exercises = [_]Exercise{
         , // pay attention to the comma
     },
     .{
-        .main_file = "088_async5.zig",
+        .main_file = "089_async5.zig",
         .output =
         \\Starting long computation...
         \\Canceling slow task...
@@ -1148,19 +1157,19 @@ const exercises = [_]Exercise{
         , // pay attention to the comma
     },
     .{
-        .main_file = "089_async6.zig",
+        .main_file = "090_async6.zig",
         .output = "Hare: I'm fast!",
     },
     .{
-        .main_file = "090_async7.zig",
+        .main_file = "091_async7.zig",
         .output = "Counter: 400",
     },
     .{
-        .main_file = "091_async8.zig",
+        .main_file = "092_async8.zig",
         .output = "Sum of 1..10 = 55",
     },
     .{
-        .main_file = "092_async9.zig",
+        .main_file = "093_async9.zig",
         .output =
         \\Main thread continues...
         \\Computing on a separate thread!
@@ -1169,7 +1178,7 @@ const exercises = [_]Exercise{
         , // pay attention to the comma
     },
     .{
-        .main_file = "093_async10.zig",
+        .main_file = "094_async10.zig",
         .output =
         \\Starting critical section...
         \\Critical section completed safely.
@@ -1177,17 +1186,14 @@ const exercises = [_]Exercise{
         , // pay attention to the comma
     },
     .{
-        .main_file = "094_async_quiz.zig",
-        .output = "",
-        .skip = true,
-    },
-    .{
-        .main_file = "095_interfaces.zig",
+        .main_file = "095_quiz_async.zig",
         .output =
-        \\Daily Insect Report:
-        \\Ant is alive.
-        \\Bee visited 17 flowers.
-        \\Grasshopper hopped 32 meters.
+        \\=== Doctor Zoraptera's Garden Report ===
+        \\Temperature : 23C
+        \\Humidity    : 63%
+        \\Wind        : 13 km/h
+        \\Readings    : 9
+        \\Bee-friendly conditions! Expect high pollination.
         , // pay attention to the comma
     },
     .{
