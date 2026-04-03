@@ -1161,13 +1161,20 @@ const exercises = [_]Exercise{
     },
     .{
         .main_file = "092_async9.zig",
-        .output = "",
-        .skip = true,
+        .output =
+        \\Main thread continues...
+        \\Computing on a separate thread!
+        \\Main thread done waiting.
+        \\Result: 123
+        , // pay attention to the comma
     },
     .{
         .main_file = "093_async10.zig",
-        .output = "",
-        .skip = true,
+        .output =
+        \\Starting critical section...
+        \\Critical section completed safely.
+        \\Task result: All data saved.
+        , // pay attention to the comma
     },
     .{
         .main_file = "094_async_quiz.zig",
