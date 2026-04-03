@@ -1137,7 +1137,7 @@ const exercises = [_]Exercise{
     },
     .{
         .main_file = "086_async2.zig",
-        .output = "Computing... the answer is: 42",
+        .output = "Computing... The answer is: 42",
     },
     .{
         .main_file = "087_async3.zig",
