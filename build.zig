@@ -1153,17 +1153,29 @@ const exercises = [_]Exercise{
     },
     .{
         .main_file = "090_async7.zig",
-        .output = "Counter: 400 (expected: 400)",
+        .output = "Counter: 400",
     },
     .{
         .main_file = "091_async8.zig",
-        .output = "ABCDEF",
-        .skip = true,
-        .skip_hint = "async has not been implemented in the current compiler version.",
+        .output = "Sum of 1..10 = 55",
     },
-
     .{
-        .main_file = "092_interfaces.zig",
+        .main_file = "092_async9.zig",
+        .output = "",
+        .skip = true,
+    },
+    .{
+        .main_file = "093_async10.zig",
+        .output = "",
+        .skip = true,
+    },
+    .{
+        .main_file = "094_async_quiz.zig",
+        .output = "",
+        .skip = true,
+    },
+    .{
+        .main_file = "095_interfaces.zig",
         .output =
         \\Daily Insect Report:
         \\Ant is alive.
@@ -1172,33 +1184,33 @@ const exercises = [_]Exercise{
         , // pay attention to the comma
     },
     .{
-        .main_file = "093_hello_c.zig",
+        .main_file = "096_hello_c.zig",
         .output = "Hello C from Zig! - C result is 17 chars written.",
         .link_libc = true,
     },
     .{
-        .main_file = "094_c_math.zig",
+        .main_file = "097_c_math.zig",
         .output = "The normalized angle of 765.2 degrees is 45.2 degrees.",
         .link_libc = true,
     },
     .{
-        .main_file = "095_for3.zig",
+        .main_file = "098_for3.zig",
         .output = "1 2 4 7 8 11 13 14 16 17 19\n1 2 3 4 5 6 7 8 9 10 11 12 13 14 15",
     },
     .{
-        .main_file = "096_memory_allocation.zig",
+        .main_file = "099_memory_allocation.zig",
         .output = "Running Average: 0.30 0.25 0.20 0.18 0.22",
     },
     .{
-        .main_file = "097_bit_manipulation.zig",
+        .main_file = "100_bit_manipulation.zig",
         .output = "x = 1011; y = 1101",
     },
     .{
-        .main_file = "098_bit_manipulation2.zig",
+        .main_file = "101_bit_manipulation2.zig",
         .output = "Is this a pangram? true!",
     },
     .{
-        .main_file = "099_formatting.zig",
+        .main_file = "102_formatting.zig",
         .output =
         \\
         \\ X |  1   2   3   4   5   6   7   8   9  10  11  12  13  14  15
@@ -1235,11 +1247,11 @@ const exercises = [_]Exercise{
         ,
     },
     .{
-        .main_file = "100_for4.zig",
+        .main_file = "103_for4.zig",
         .output = "Arrays match!",
     },
     .{
-        .main_file = "101_for5.zig",
+        .main_file = "104_for5.zig",
         .output =
         \\1. Wizard (Gold: 25, XP: 40)
         \\2. Bard (Gold: 11, XP: 17)
@@ -1248,12 +1260,12 @@ const exercises = [_]Exercise{
         , // pay attention to the comma
     },
     .{
-        .main_file = "102_testing.zig",
+        .main_file = "105_testing.zig",
         .output = "",
         .kind = .@"test",
     },
     .{
-        .main_file = "103_tokenization.zig",
+        .main_file = "106_tokenization.zig",
         .output =
         \\My
         \\name
@@ -1274,7 +1286,7 @@ const exercises = [_]Exercise{
         , // pay attention to the comma
     },
     .{
-        .main_file = "104_threading.zig",
+        .main_file = "107_threading.zig",
         .output =
         \\Starting work...
         \\thread 1: started.
@@ -1288,32 +1300,32 @@ const exercises = [_]Exercise{
         , // pay attention to the comma
     },
     .{
-        .main_file = "105_threading2.zig",
+        .main_file = "108_threading2.zig",
         .output = "PI ≈ 3.14159265",
     },
     .{
-        .main_file = "106_files.zig",
+        .main_file = "109_files.zig",
         .output = "Successfully wrote 18 bytes.",
     },
     .{
-        .main_file = "107_files2.zig",
+        .main_file = "110_files2.zig",
         .output =
         \\AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
         \\Successfully Read 18 bytes: It's zigling time!
         , // pay attention to the comma
     },
     .{
-        .main_file = "108_labeled_switch.zig",
+        .main_file = "111_labeled_switch.zig",
         .output = "The pull request has been merged.",
     },
     .{
-        .main_file = "109_vectors.zig",
+        .main_file = "112_vectors.zig",
         .output =
         \\Max difference (old fn): 0.014
         \\Max difference (new fn): 0.014
         , // pay attention to the comma
     },
-    .{ .main_file = "110_quiz9.zig", .output =
+    .{ .main_file = "113_quiz9.zig", .output =
     \\Toggle pins with XOR on PORTB
     \\-----------------------------
     \\  1100 // (initial state of PORTB)
@@ -1345,11 +1357,11 @@ const exercises = [_]Exercise{
     \\= 0110
     },
     .{
-        .main_file = "111_packed.zig",
+        .main_file = "114_packed.zig",
         .output = "",
     },
     .{
-        .main_file = "112_packed2.zig",
+        .main_file = "115_packed2.zig",
         .output = "",
     },
     .{

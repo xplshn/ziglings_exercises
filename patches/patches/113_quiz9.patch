@@ -1,6 +1,6 @@
---- exercises/110_quiz9.zig	2025-02-08 13:19:48.522641785 -0800
-+++ answers/110_quiz9.zig	2025-02-10 17:42:04.525004335 -0800
-@@ -108,7 +108,7 @@
+--- exercises/113_quiz9.zig	2025-08-15 15:17:57.840348083 +0200
++++ answers/113_quiz9.zig	2026-04-02 10:51:15.821831851 +0200
+@@ -84,7 +84,7 @@
      PORTB = 0b1100;
      print("  {b:0>4} // (initial state of PORTB)\n", .{PORTB});
      print("^ {b:0>4} // (bitmask)\n", .{0b0101});
@@ -9,7 +9,7 @@
      checkAnswer(0b1001, PORTB);
  
      newline();
-@@ -116,7 +116,7 @@
+@@ -92,7 +92,7 @@
      PORTB = 0b1100;
      print("  {b:0>4} // (initial state of PORTB)\n", .{PORTB});
      print("^ {b:0>4} // (bitmask)\n", .{0b0011});
@@ -18,7 +18,7 @@
      checkAnswer(0b1111, PORTB);
  
      newline();
-@@ -170,7 +170,7 @@
+@@ -103,7 +103,7 @@
      PORTB = 0b1001; // reset PORTB
      print("  {b:0>4} // (initial state of PORTB)\n", .{PORTB});
      print("| {b:0>4} // (bitmask)\n", .{0b0100});
@@ -27,7 +27,7 @@
      checkAnswer(0b1101, PORTB);
  
      newline();
-@@ -178,7 +178,7 @@
+@@ -111,7 +111,7 @@
      PORTB = 0b1001; // reset PORTB
      print("  {b:0>4} // (reset state)\n", .{PORTB});
      print("| {b:0>4} // (bitmask)\n", .{0b0100});
@@ -36,7 +36,7 @@
      checkAnswer(0b1101, PORTB);
  
      newline();
-@@ -269,7 +269,7 @@
+@@ -122,7 +122,7 @@
      PORTB = 0b1110; // reset PORTB
      print("  {b:0>4} // (initial state of PORTB)\n", .{PORTB});
      print("& {b:0>4} // (bitmask)\n", .{0b1011});
@@ -45,7 +45,7 @@
      checkAnswer(0b1010, PORTB);
  
      newline();
-@@ -277,7 +277,7 @@
+@@ -130,7 +130,7 @@
      PORTB = 0b0111; // reset PORTB
      print("  {b:0>4} // (reset state)\n", .{PORTB});
      print("& {b:0>4} // (bitmask)\n", .{0b1110});

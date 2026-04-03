@@ -1,5 +1,5 @@
---- exercises/095_for3.zig	2026-02-27 19:33:59
-+++ answers/095_for3.zig	2026-02-27 19:33:38
+--- exercises/098_for3.zig	2026-03-20 19:23:48.873150100 +0100
++++ answers/098_for3.zig	2026-04-03 13:09:39.916433087 +0200
 @@ -56,7 +56,7 @@
  
      // I want to print every number between 1 and 20 that is NOT

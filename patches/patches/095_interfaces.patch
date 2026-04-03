@@ -1,5 +1,5 @@
---- exercises/092_interfaces.zig	2023-10-03 22:15:22.125574535 +0200
-+++ answers/092_interfaces.zig	2023-10-05 20:04:07.259437354 +0200
+--- exercises/095_interfaces.zig	2025-08-15 15:17:57.839348063 +0200
++++ answers/095_interfaces.zig	2026-04-03 13:09:13.722917764 +0200
 @@ -106,7 +106,7 @@
      for (my_insects) |insect| {
          // Almost done! We want to print() each insect with a

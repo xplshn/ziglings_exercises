@@ -1,5 +1,5 @@
---- exercises/107_files2.zig	2026-01-09 22:43:15.211177186 +0100
-+++ answers/107_files2.zig	2026-01-09 22:42:48.943654602 +0100
+--- exercises/110_files2.zig	2026-03-20 19:23:48.874150121 +0100
++++ answers/110_files2.zig	2026-04-02 10:51:15.815831734 +0200
 @@ -39,7 +39,7 @@
      // initialize an array of u8 with all letter 'A'
      // we need to pick the size of the array, 64 seems like a good number

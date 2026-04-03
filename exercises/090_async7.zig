@@ -42,7 +42,7 @@ pub fn main(init: std.process.Init) !void {
 
     try group.await(io);
 
-    print("Counter: {} (expected: 400)\n", .{state.counter});
+    print("Counter: {}\n", .{state.counter});
 }
 
 fn increment(io: std.Io, state: *SharedState, times: u32) void {

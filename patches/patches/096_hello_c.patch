@@ -1,5 +1,5 @@
---- exercises/093_hello_c.zig	2023-10-03 22:15:22.125574535 +0200
-+++ answers/093_hello_c.zig	2023-10-05 20:04:07.262770750 +0200
+--- exercises/096_hello_c.zig	2025-08-15 15:17:57.839348063 +0200
++++ answers/096_hello_c.zig	2026-04-03 13:09:26.195163128 +0200
 @@ -54,7 +54,7 @@
      //
      // In this exercise we use 'write' to output 17 chars,

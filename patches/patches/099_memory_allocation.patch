@@ -1,5 +1,5 @@
---- exercises/096_memory_allocation.zig	2023-11-21 14:55:33.805678390 +0100
-+++ answers/096_memory_allocation.zig	2023-11-21 14:56:00.236163484 +0100
+--- exercises/099_memory_allocation.zig	2025-08-15 15:17:57.839348063 +0200
++++ answers/099_memory_allocation.zig	2026-04-03 13:09:47.403580391 +0200
 @@ -64,7 +64,7 @@
      const allocator = arena.allocator();
  
