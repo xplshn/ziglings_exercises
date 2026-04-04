@@ -1,0 +1,52 @@
+--- exercises/095_quiz_async.zig	2026-04-03 18:04:53.577391455 +0200
++++ answers/095_quiz_async.zig	2026-04-03 18:05:42.570392172 +0200
+@@ -51,7 +51,7 @@
+         // Bug 1: The collector needs to lock before modifying
+         // shared state. What Mutex method acquires the lock?
+         self.mutex.lock(io) catch return;
+-        self.mutex.???(io) catch return;
++        defer self.mutex.unlock(io);
+ 
+         switch (reading.sensor_type) {
+             .thermometer => self.temperature = reading.value,
+@@ -79,9 +79,9 @@
+     // Bug 2: io.async doesn't guarantee a separate thread.
+     // Which Io method guarantees true concurrency?
+     // (Don't forget: it can fail, so you need 'try'!)
+-    try sensors.???(io, sensor, .{ io, &queue, .thermometer, 20 });
+-    try sensors.???(io, sensor, .{ io, &queue, .hygrometer, 60 });
+-    try sensors.???(io, sensor, .{ io, &queue, .anemometer, 10 });
++    try sensors.concurrent(io, sensor, .{ io, &queue, .thermometer, 20 });
++    try sensors.concurrent(io, sensor, .{ io, &queue, .hygrometer, 60 });
++    try sensors.concurrent(io, sensor, .{ io, &queue, .anemometer, 10 });
+ 
+     // Collector group: processes readings from the queue.
+     var collectors: std.Io.Group = .init;
+@@ -90,7 +90,6 @@
+     // Bug 3: Wait for ALL sensors to finish sending their readings.
+     // What Group method blocks until all tasks complete?
+     try sensors.await(io);
+-    // try sensors.???(io);
+ 
+     // All sensors done — close the queue so the collector knows
+     // there's no more data coming.
+@@ -104,8 +103,8 @@
+     //
+     // Bug 4: Protect this section from cancellation.
+     // What Io method swaps the cancel protection state?
+-    const old_protection = io.???(.blocked);
+-    defer _ = io.???(old_protection);
++    const old_protection = io.swapCancelProtection(.blocked);
++    defer _ = io.swapCancelProtection(old_protection);
+ 
+     printGardenReport(&weather);
+ }
+@@ -127,7 +126,7 @@
+ 
+         // Bug 5: Send the reading into the queue.
+         // What Queue method sends a single element?
+-        queue.???(io, reading) catch return;
++        queue.putOne(io, reading) catch return;
+     }
+ }
+ 

@@ -1,0 +1,11 @@
+--- exercises/093_async9.zig	2026-04-03 13:44:50.526780809 +0200
++++ answers/093_async9.zig	2026-04-03 13:44:54.957870294 +0200
+@@ -36,7 +36,7 @@
+     // Launch with a guaranteed separate thread.
+     // Which Io method guarantees true concurrency?
+     // (Hint: unlike io.async, this one can fail!)
+-    var future = try io.???(compute, .{io});
++    var future = try io.concurrent(compute, .{io});
+ 
+     print("Main thread continues...\n", .{});
+ 
