@@ -5,20 +5,17 @@
 // them all. The Io backend may run them concurrently:
 //
 //     var f1 = io.async(taskA, .{});
+//     defer _ = f1.cancel(io);
 //     var f2 = io.async(taskB, .{});
-//
-//     // Both tasks may be running now!
+//     defer _ = f2.cancel(io);
 //     const a = f1.await(io);
 //     const b = f2.await(io);
 //
-// There's also io.concurrent() which provides a STRONGER guarantee:
-// it ensures the function gets its own unit of concurrency (e.g. a
-// real OS thread). But it can fail with error.ConcurrencyUnavailable
-// if resources are exhausted.
-//
-// io.async() is more portable: if no thread is available, it simply
-// runs the function synchronously. This makes it the right default
-// for most code.
+// Notice the defer pattern: each async call is immediately
+// followed by a defer cancel. This ensures cleanup even if
+// we return early or hit an error before reaching await.
+// Since await/cancel are idempotent, the defer is harmless
+// if we've already awaited.
 //
 // Fix this program to launch both tasks and collect their results.
 //
@@ -29,12 +26,14 @@ pub fn main(init: std.process.Init) !void {
     const io = init.io;
 
     // Launch both tasks asynchronously.
-    var future_a = io.async(slowAdd, .{ 10, 20 });
+    var future_a = io.async(slowAdd, .{ 1, 2 });
+    defer _ = future_a.cancel(io);
     var future_b = ???(slowMul, .{ 6, 7 });
+    defer _ = future_b.cancel(io);
 
     // Await both results.
     const sum = future_a.await(io);
-    const product = future_b.???(io);
+    const product = future_b.await(io);
 
     print("{} + {} = {}\n", .{ 1, 2, sum });
     print("{} * {} = {}\n", .{ 6, 7, product });
