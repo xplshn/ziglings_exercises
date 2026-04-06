@@ -1180,9 +1180,9 @@ const exercises = [_]Exercise{
     .{
         .main_file = "093_async9.zig",
         .output =
-        \\Main thread continues...
-        \\Computing on a separate thread!
-        \\Main thread done waiting.
+        \\Computing concurrently!
+        \\Main continues...
+        \\Main done waiting.
         \\Result: 123
         , // pay attention to the comma
     },
