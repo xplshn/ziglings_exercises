@@ -1,5 +1,5 @@
 //
-// In exercise 088, we learned that cancellation happens at
+// In exercise 089, we learned that cancellation happens at
 // "cancellation points" — any Io function that can return
 // error.Canceled.
 //
@@ -11,7 +11,7 @@
 //
 //     const old = io.swapCancelProtection(.blocked);
 //     defer _ = io.swapCancelProtection(old);
-//
+
 //     // In this block, NO Io function will return error.Canceled.
 //     // The cancel request is held until protection is restored.
 //
@@ -36,9 +36,10 @@ pub fn main(init: std.process.Init) !void {
     const io = init.io;
 
     var future = io.async(importantTask, .{io});
+    defer _ = future.cancel(io);
 
     // Give the task time to start and enter its critical section.
-    io.sleep(std.Io.Duration.fromMilliseconds(300), .awake) catch {};
+    io.sleep(std.Io.Duration.fromMilliseconds(200), .awake) catch {};
 
     // Cancel while the task is in its protected section.
     const result = future.cancel(io);
@@ -50,12 +51,12 @@ fn importantTask(io: std.Io) []const u8 {
 
     // Protect this section from cancellation.
     // What method swaps the cancel protection state?
-    const old = io.???(. blocked);
+    const old = io.???(.blocked);
     defer _ = io.???(old);
 
     // This sleep will NOT return error.Canceled even though
     // we get canceled during it — protection is active!
-    io.sleep(std.Io.Duration.fromMilliseconds(600), .awake) catch |err| switch (err) {
+    io.sleep(std.Io.Duration.fromMilliseconds(300), .awake) catch |err| switch (err) {
         error.Canceled => {
             // This should never happen while protected!
             return "ERROR: canceled during critical section!";
