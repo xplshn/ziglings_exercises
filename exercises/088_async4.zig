@@ -14,7 +14,7 @@
 //   * Once you call group.async(), you MUST eventually call
 //     group.await() or group.cancel() to release resources.
 //   * group.cancel() requests cancellation on ALL members,
-//     then waits for them to finish.
+//     then blocks until they all finish.
 //
 // Unlike Future, Group tasks don't return values to the caller.
 // They're ideal for parallel work that communicates through
@@ -38,7 +38,7 @@ pub fn main(init: std.process.Init) !void {
 
     // Wait for all tasks to finish.
     // What Group method blocks until all tasks complete?
-    try group.???
+    try group.???(io);
 
     print("All tasks finished!\n", .{});
 }

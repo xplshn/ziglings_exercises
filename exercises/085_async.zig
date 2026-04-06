@@ -7,10 +7,11 @@
 // This interface uses a VTable pattern - a struct of function pointers -
 // to abstract over different concurrency backends:
 //
-//   * Threaded  - classic thread-pool based I/O
-//   * Uring     - Linux io_uring
-//   * Kqueue    - BSD/macOS
-//   * Dispatch  - macOS Grand Central Dispatch
+//   * Threaded  - thread-pool based I/O
+//   * Evented   - chooses the best event-loop backend for your OS:
+//       * Uring    on Linux (io_uring)
+//       * Kqueue   on BSD/macOS
+//       * Dispatch on macOS (Grand Central Dispatch)
 //
 // The Io struct itself is tiny:
 //

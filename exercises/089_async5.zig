@@ -5,7 +5,7 @@
 // Every Future has a .cancel() method that:
 //   1. Requests the task to stop (via error.Canceled at the
 //      next "cancellation point")
-//   2. Waits for the task to actually finish
+//   2. BLOCKS until the task actually finishes
 //   3. Returns whatever result the task produced
 //
 // A "cancellation point" is any Io function that can return
@@ -13,13 +13,18 @@
 //
 //     fn myTask(io: std.Io) u32 {
 //         io.sleep(...) catch |err| switch (err) {
-//             error.Canceled => return 0,  // handle gracefully
+//             error.Canceled => return 0,  // error handle
 //         };
 //         return 42;
 //     }
 //
 // This is fundamentally different from killing a thread -
 // the task gets a chance to clean up and return a value!
+//
+// Remember: both .await() and .cancel() block and return the
+// result. The only difference is that .cancel() also sends
+// the cancellation request. And both are idempotent — calling
+// either one again just returns the same result.
 //
 // Fix this program: the slow task would take 10 seconds,
 // but we cancel it after 1 second. The task should detect
@@ -32,6 +37,7 @@ pub fn main(init: std.process.Init) !void {
     const io = init.io;
 
     var future = io.async(slowTask, .{io});
+    defer _ = future.cancel(io); // safety net
 
     // Wait 1 second, then cancel instead of waiting the full 10.
     io.sleep(std.Io.Duration.fromSeconds(1), .awake) catch {};
@@ -40,7 +46,7 @@ pub fn main(init: std.process.Init) !void {
 
     // We don't want to wait 10 seconds!
     // Which Future method requests cancellation AND returns the result?
-    const result = ???;
+    const result = future.???(io);
 
     print("Task returned: {}\n", .{result});
 }
