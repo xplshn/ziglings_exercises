@@ -193,7 +193,7 @@ Zig Core Language
 * [x] Sentinel termination
 * [x] Quoted identifiers @""
 * [x] Anonymous structs/tuples/lists
-* [ ] Async I/O
+* [x] Async I/O
 * [X] Interfaces
 * [X] Bit manipulation
 * [X] Working with C

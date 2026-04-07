@@ -1,0 +1,11 @@
+--- exercises/093_async9.zig	2026-04-06 19:26:11.388025362 +0200
++++ answers/093_async9.zig	2026-04-06 19:18:36.242931688 +0200
+@@ -43,7 +43,7 @@
+     // Launch with a guaranteed separate unit of concurrency.
+     // Which Io method guarantees this?
+     // (Hint: unlike io.async, this one can fail!)
+-    var future = try io.???(compute, .{io});
++    var future = try io.concurrent(compute, .{io});
+     defer _ = future.cancel(io);
+ 
+     // Note: All breaks in this excercise (using sleep)
