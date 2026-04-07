@@ -49,6 +49,8 @@ pub fn main() void {
     // notation. Experiment with '{d}' and '{d:.3}' to see how
     // decimal formatting works, or try '{e}' and '{e:.3}' for
     // scientific notation.
+    // NOTE: The weight of the shuttle is a huge number, a scientific notation
+    // may be more appropriate.
     print("Shuttle liftoff weight: {d:.0} metric tons\n", .{shuttle_weight / 1e3});
 }
 
