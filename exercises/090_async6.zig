@@ -23,6 +23,11 @@
 //     }
 //     sel.cancelDiscard();  // cancel remaining, discard results
 //
+// As with all async primitives: tasks spawned in a Select MUST
+// be cleaned up. Use sel.cancel() to get remaining results one
+// by one (for resource cleanup), or sel.cancelDiscard() if you
+// don't need them.
+//
 // The buffer must be large enough for all tasks that might
 // complete before you call cancelDiscard().
 //
@@ -47,7 +52,7 @@ pub fn main(init: std.process.Init) !void {
 
     // Wait for the first finisher.
     // What Select method returns the first completed result?
-    const winner = ???;
+    const winner = try sel.???();
 
     switch (winner) {
         .hare => |msg| print("Hare: {s}\n", .{msg}),

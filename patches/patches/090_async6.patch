@@ -1,10 +1,10 @@
---- exercises/090_async6.zig	2026-04-02 10:25:34.016616118 +0200
-+++ answers/090_async6.zig	2026-04-02 10:27:48.827144051 +0200
-@@ -47,7 +47,7 @@
+--- exercises/090_async6.zig	2026-04-06 18:49:37.232023422 +0200
++++ answers/090_async6.zig	2026-04-06 18:49:22.189720687 +0200
+@@ -52,7 +52,7 @@
  
      // Wait for the first finisher.
      // What Select method returns the first completed result?
--    const winner = ???;
+-    const winner = try sel.???();
 +    const winner = try sel.await();
  
      switch (winner) {

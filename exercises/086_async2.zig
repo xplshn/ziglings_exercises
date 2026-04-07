@@ -6,41 +6,47 @@
 // won't necessarily be available until you call .await() on it:
 //
 //     var future = io.async(someFunction, .{ arg1, arg2 });
-//     // ... do other work here ...
 //     const result = future.await(io);
 //
 // The function *may* run immediately or on another thread -
 // your code doesn't need to care! That's the beauty of the
-// Io abstraction. (In the Threaded backend, if no thread is
-// available, the function runs synchronously right away and
-// .await() just returns the already-computed result.)
+// Io abstraction.
 //
-// io.async() returns a Future(T) where T is the return type
-// of the function you passed in. Future has two key methods:
+// IMPORTANT: Every Future MUST be either .await()ed or .cancel()ed.
+// Failing to do so leaks resources! A safe pattern is:
 //
-//     .await(io)  - block until the result is ready, return it
-//     .cancel(io) - request cancellation, then return the result
+//     var future = io.async(myFn, .{});
+//     defer _ = future.cancel(io);  // safety net
+//     // ... later, if we want the result:
+//     const result = future.await(io);
+//     // (await after cancel is fine — it just returns the result)
+//
+// Both .await() and .cancel() block until the task finishes and
+// return the result. The difference is that .cancel() also
+// requests the task to stop at its next cancellation point.
+// Calling either one more than once is safe — subsequent calls
+// just return a copy of the result.
 //
 // Fix this program so that computeAnswer runs asynchronously
 // and its result is properly awaited.
 //
 const std = @import("std");
+const print = std.debug.print;
 
 pub fn main(init: std.process.Init) !void {
     const io = init.io;
 
     // Launch computeAnswer asynchronously.
-    // io.async() takes a function and a tuple of its arguments.
     var future = io.async(computeAnswer, .{ 6, 7 });
+    defer _ = future.cancel(io); // always clean up!
 
-    // Meanwhile, print something to show we're not blocked.
-    std.debug.print("Computing... ", .{});
+    print("Computing... ", .{});
 
     // Now collect the result. What method on Future gives us
-    // the value, blocking if it isn't ready yet?
+    // the value, blocking until it's ready?
     const answer = future.???(io);
 
-    std.debug.print("The answer is: {}\n", .{answer});
+    print("The answer is: {}\n", .{answer});
 }
 
 fn computeAnswer(a: u32, b: u32) u32 {
