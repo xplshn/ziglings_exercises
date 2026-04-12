@@ -38,6 +38,23 @@ Feel free to submit new exercises but please understand that they
 may be heavily edited or rejected entirely if we feel they don't
 fit for one reason or another.
 
+
+## AI-Generated Content
+
+We welcome contributions from non-native English speakers and
+appreciate the effort it takes to write in a foreign language.
+Using AI tools to polish your English is fine.
+
+What we don't accept is AI-generated exercises, AI-generated
+comments, or pull requests produced by coding agents. Ziglings
+exercises require understanding the Zig build system, the
+didactic progression, and the specific conventions of this
+project. That understanding doesn't come from a prompt.
+
+If we suspect a contribution is primarily AI-generated, we will
+close it.
+
+
 ## Platforms and Zig Versions
 
 
