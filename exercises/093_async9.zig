@@ -46,7 +46,7 @@ pub fn main(init: std.process.Init) !void {
     var future = try io.???(compute, .{io});
     defer _ = future.cancel(io);
 
-    // Note: All breaks in this excercise (using sleep)
+    // Note: All breaks in this exercise (using sleep)
     // are only necessary for a deterministic result.
     io.sleep(std.Io.Duration.fromMilliseconds(100), .awake) catch {};
 
