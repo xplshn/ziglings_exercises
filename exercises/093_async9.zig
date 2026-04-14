@@ -33,7 +33,7 @@
 // Let's try a slightly simplified example from signal processing:
 // Suppose we're looking for the beginning of a signal above the noise
 // level. To do this, we compare each entry from beginning to end with
-// the threshold.To speed things up a bit, we split the signal into
+// the threshold. To speed things up a bit, we split the signal into
 // two halves and have two parallel workers search for them.
 // Who finds the beginning first "wins" and thus ends the other one.
 //
@@ -61,10 +61,11 @@ pub fn main(init: std.process.Init) !void {
     var queue = Io.Queue(SearchResult).init(&buf);
 
     // Launch two workers, each searching half the array.
-    var f1 = ???(searchRange, .{ data[0..mid], target, 0, 0, &queue, io });
+    // Remember, we want them to be guaranteed separate units of concurrency.
+    var f1 = ???(searchThreshold, .{ io, data[0..mid], threshold, 0, 0, &queue });
     defer _ = f1.cancel(io);
 
-    var f2 = ???(searchRange, .{ data[mid..], target, mid, 1, &queue, io });
+    var f2 = ???(searchThreshold, .{ io, data[mid..], threshold, mid, 1, &queue });
     defer _ = f2.cancel(io);
 
     // Wait for the first result.
@@ -87,7 +88,7 @@ fn searchThreshold(
         // all workers would continue until the end.
         io.sleep(Io.Duration.fromMilliseconds(1), .awake) catch return;
 
-        // To test this, you can view the work of the workers
+        // To test this, you can uncomment this to view the work of the workers
         // and then comment out the pause.
         // print("id: {} - val: {}\n", .{ worker_id, val });
 
@@ -100,4 +101,3 @@ fn searchThreshold(
         }
     }
 }
-
