@@ -105,3 +105,6 @@ fn thread_pi(pi: *f64, begin: u64, end: u64) !void {
 //
 // And you should remove the formatting restriction in "print",
 // otherwise you will not be able to see the additional digits.
+//
+// If count = 10_000_000_000_000 you should see the following:
+// 3.141592653589
