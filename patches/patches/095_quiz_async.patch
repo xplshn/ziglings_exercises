@@ -1,5 +1,5 @@
---- exercises/095_quiz_async.zig	2026-04-06 19:55:17.111817364 +0200
-+++ answers/095_quiz_async.zig	2026-04-06 19:56:16.063974543 +0200
+--- exercises/095_quiz_async.zig	2026-04-13 19:11:04.173440326 -0700
++++ answers/095_quiz_async.zig	2026-04-13 19:10:31.618592222 -0700
 @@ -51,7 +51,7 @@
      fn addReading(self: *GardenWeather, io: std.Io, reading: Reading) void {
          // Bug 1: The collector needs to lock before modifying
@@ -18,7 +18,7 @@
      defer _ = collector_future.cancel(io);
  
      // Sensor group: the sensors can use async — they just need
-@@ -91,7 +91,7 @@
+@@ -91,22 +91,22 @@
  
      // Bug 3: Wait for ALL sensors to finish sending their readings.
      // What Group method blocks until all tasks complete?
@@ -27,11 +27,11 @@
  
      // All sensors done — close the queue so the collector knows
      // there's no more data coming.
-@@ -99,15 +99,14 @@
+     queue.close(io);
  
-     // Wait for the collector to drain the remaining queue.
-     _ = collector_future.await(io);
--    // _ = collector_future.???(io);
+     // Bug 4: How do we wait for the collector to drain the remaining queue?
+-    _ = collector_future.???(io);
++    _ = collector_future.await(io);
  
      // Now write the garden report. This is critical — it must
      // NOT be interrupted, even if something tries to cancel us!
@@ -45,7 +45,7 @@
  
      printGardenReport(&weather);
  }
-@@ -129,7 +128,7 @@
+@@ -128,7 +128,7 @@
  
          // Bug 6: Send the reading into the queue.
          // What Queue method sends a single element?

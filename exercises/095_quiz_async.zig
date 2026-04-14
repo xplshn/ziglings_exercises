@@ -97,9 +97,8 @@ pub fn main(init: std.process.Init) !void {
     // there's no more data coming.
     queue.close(io);
 
-    // Wait for the collector to drain the remaining queue.
-    _ = collector_future.await(io);
-    // _ = collector_future.???(io);
+    // Bug 4: How do we wait for the collector to drain the remaining queue?
+    _ = collector_future.???(io);
 
     // Now write the garden report. This is critical — it must
     // NOT be interrupted, even if something tries to cancel us!
