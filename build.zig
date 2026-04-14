@@ -1179,12 +1179,7 @@ const exercises = [_]Exercise{
     },
     .{
         .main_file = "093_async9.zig",
-        .output =
-        \\Computing concurrently!
-        \\Main continues...
-        \\Main done waiting.
-        \\Result: 123
-        , // pay attention to the comma
+        .output = "Worker 1 found signal start over threshold at index 12!",
     },
     .{
         .main_file = "094_async10.zig",
