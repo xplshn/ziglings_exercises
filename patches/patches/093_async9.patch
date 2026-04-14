@@ -1,11 +1,20 @@
---- exercises/093_async9.zig	2026-04-13 17:55:35.567204530 +0200
-+++ answers/093_async9.zig	2026-04-13 18:05:05.636355044 +0200
-@@ -43,7 +43,7 @@
-     // Launch with a guaranteed separate unit of concurrency.
-     // Which Io method guarantees this?
-     // (Hint: unlike io.async, this one can fail!)
--    var future = try io.???(compute, .{io});
-+    var future = try io.concurrent(compute, .{io});
-     defer _ = future.cancel(io);
+--- exercises/093_async9.zig	2026-04-14 09:50:05.694073287 +0200
++++ answers/093_async9.zig	2026-04-14 09:49:58.604934765 +0200
+@@ -61,10 +61,10 @@
+     var queue = Io.Queue(SearchResult).init(&buf);
  
-     // Note: All breaks in this exercise (using sleep)
+     // Launch two workers, each searching half the array.
+-    var f1 = ???(searchRange, .{ data[0..mid], target, 0, 0, &queue, io });
++    var f1 = try io.concurrent(searchThreshold, .{ io, data[0..mid], threshold, 0, 0, &queue });
+     defer _ = f1.cancel(io);
+ 
+-    var f2 = ???(searchRange, .{ data[mid..], target, mid, 1, &queue, io });
++    var f2 = try io.concurrent(searchThreshold, .{ io, data[mid..], threshold, mid, 1, &queue });
+     defer _ = f2.cancel(io);
+ 
+     // Wait for the first result.
+@@ -100,4 +100,3 @@
+         }
+     }
+ }
+-
