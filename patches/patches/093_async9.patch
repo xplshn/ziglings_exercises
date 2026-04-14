@@ -1,9 +1,9 @@
---- exercises/093_async9.zig	2026-04-14 09:50:05.694073287 +0200
-+++ answers/093_async9.zig	2026-04-14 09:49:58.604934765 +0200
-@@ -61,10 +61,10 @@
-     var queue = Io.Queue(SearchResult).init(&buf);
+--- exercises/093_async9.zig	2026-04-14 22:06:23.644776893 +0200
++++ answers/093_async9.zig	2026-04-14 22:06:30.606912044 +0200
+@@ -63,10 +63,10 @@
  
      // Launch two workers, each searching half the array.
+     // Remember, we want them to be guaranteed separate units of concurrency.
 -    var f1 = ???(searchRange, .{ data[0..mid], target, 0, 0, &queue, io });
 +    var f1 = try io.concurrent(searchThreshold, .{ io, data[0..mid], threshold, 0, 0, &queue });
      defer _ = f1.cancel(io);
@@ -13,8 +13,3 @@
      defer _ = f2.cancel(io);
  
      // Wait for the first result.
-@@ -100,4 +100,3 @@
-         }
-     }
- }
--
