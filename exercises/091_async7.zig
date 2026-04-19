@@ -6,7 +6,7 @@
 //
 //     // In a task:
 //     try mutex.lock(io);       // blocks until lock is acquired
-//     defer mutex.unlock();
+//     defer mutex.unlock(io);
 //     // ... critical section: safe to modify shared data ...
 //
 // Without the mutex, concurrent tasks could read and write the
