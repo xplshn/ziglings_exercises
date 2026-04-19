@@ -1,6 +1,6 @@
 //
 // Prerequisite :
-//    - exercise/106_files.zig, or
+//    - exercise/109_files.zig, or
 //    - create a file {project_root}/output/zigling.txt
 //      with content `It's zigling time!`(18 bytes total)
 //
