@@ -1230,11 +1230,15 @@ const exercises = [_]Exercise{
         .main_file = "096_hello_c.zig",
         .output = "Hello C from Zig! - C result is 17 chars written.",
         .link_libc = true,
+        .skip = true,
+        .skip_hint = "Skipped until we have found a solution for the removed '@cImport'",
     },
     .{
         .main_file = "097_c_math.zig",
         .output = "The normalized angle of 765.2 degrees is 45.2 degrees.",
         .link_libc = true,
+        .skip = true,
+        .skip_hint = "Skipped until we have found a solution for the removed '@cImport'",
     },
     .{
         .main_file = "098_for3.zig",
