@@ -74,10 +74,10 @@ The Zig language is under very active development. In order to be
 current, Ziglings tracks **development** builds of the Zig
 compiler rather than versioned **release** builds. The last
 stable release was `0.16`, but Ziglings needs a dev build with
-pre-release version "0.16.0" and a build number at least as high
+pre-release version "0.17.0-dev" and a build number at least as high
 as that shown in the example version check above.
 
-**Hint**: You can find a version change summary at the end of this README.
+**Hint**: You can find a summary of breaking changes at the end of this README.
 
 It is likely that you'll download a build which is _greater_ than
 the minimum.
@@ -106,12 +106,6 @@ Or let Ziglings pick an exercise for you:
 zig build -Drandom
 ```
 
-You can also run without checking for correctness:
-
-```
-zig build -Dn=19 test
-```
-
 Or skip the build system entirely and interact directly with the
 compiler if you're into that sort of thing:
 
@@ -119,22 +113,10 @@ compiler if you're into that sort of thing:
 zig run exercises/001_hello.zig
 ```
 
-Calling all wizards: To prepare an executable for debugging,
-install it to zig-cache/bin with:
-
-```
-zig build -Dn=19 install
-```
-
 To get a list of all possible options, run:
 
 ```
-zig build -Dn=19 -l
-
-  install          Install 019_functions2.zig to prefix path
-  uninstall        Uninstall 019_functions2.zig from prefix path
-  test             Run 019_functions2.zig without checking output
-  ...
+zig build -h
 ```
 
 To reset the progress (have it run all the exercises that have already been completed):
