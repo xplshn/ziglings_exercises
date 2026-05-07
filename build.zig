@@ -777,7 +777,7 @@ const exercises = [_]Exercise{
     },
     .{
         .main_file = "006_strings.zig",
-        .output = "d=d ha ha ha Major Tom",
+        .output = "d=d Major Tom",
         .hint = "Each '???' needs something filled in.",
     },
     .{

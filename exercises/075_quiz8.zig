@@ -48,9 +48,7 @@ const Path = struct {
 // instead.
 //
 // Please fill in the body of this function!
-fn makePath(from: *Place, to: *Place, dist: u8) Path {
-
-}
+fn makePath(from: *Place, to: *Place, dist: u8) Path {}
 
 // Using our new function, these path definitions take up considerably less
 // space in our program now!
@@ -97,7 +95,7 @@ const NotebookEntry = struct {
 };
 
 const HermitsNotebook = struct {
-    entries: [place_count]?NotebookEntry = .{null} ** place_count,
+    entries: [place_count]?NotebookEntry = @splat(null),
     next_entry: u8 = 0,
     end_of_entries: u8 = 0,
 
@@ -193,7 +191,7 @@ pub fn main() void {
         }
     }
 
-    var trip = [_]?TripItem{null} ** (place_count * 2);
+    var trip: [place_count * 2]?TripItem = @splat(null);
 
     notebook.getTripTo(trip[0..], destination) catch |err| {
         print("Oh no! {}\n", .{err});

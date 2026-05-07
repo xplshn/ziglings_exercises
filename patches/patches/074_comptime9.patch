@@ -1,5 +1,5 @@
---- exercises/074_comptime9.zig	2026-04-30 19:28:08.990995153 +0200
-+++ answers/074_comptime9.zig	2026-04-30 19:27:09.642728692 +0200
+--- exercises/074_comptime9.zig	2026-05-04 17:11:05.144118157 +0200
++++ answers/074_comptime9.zig	2026-05-04 17:10:36.778519877 +0200
 @@ -28,12 +28,12 @@
          start, // Ready to start a new animal.
          l, // This means we've seen an "l", so if we see an "m", we know it's a Llama.
@@ -9,7 +9,7 @@
  
      // We return an array of animals representing the creature. (This is why we
      // really needed the 'count' parameter. Arrays need a size.)
-     var animals: [count]Animal = .{undefined} ** count;
+     var animals: [count]Animal = undefined;
 -    var next_animal: usize = 0;
 +    comptime var next_animal: usize = 0;
  

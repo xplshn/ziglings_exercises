@@ -32,7 +32,7 @@ fn makeCreature(comptime count: usize, comptime fmt: []const u8) [count]Animal {
 
     // We return an array of animals representing the creature. (This is why we
     // really needed the 'count' parameter. Arrays need a size.)
-    var animals: [count]Animal = .{undefined} ** count;
+    var animals: [count]Animal = undefined;
     var next_animal: usize = 0;
 
     inline for (fmt) |char| {

@@ -1,5 +1,5 @@
 //
-// Zig has some fun array operators.
+// Zig has one array operators.
 //
 // You can use '++' to concatenate two arrays:
 //
@@ -7,12 +7,8 @@
 //   const b = [_]u8{ 3,4 };
 //   const c = a ++ b ++ [_]u8{ 5 }; // equals 1 2 3 4 5
 //
-// You can use '**' to repeat an array:
-//
-//   const d = [_]u8{ 1,2,3 } ** 2; // equals 1 2 3 1 2 3
-//
-// Note that both '++' and '**' only operate on arrays while your
-// program is _being compiled_. This special time is known in Zig
+// Note that '++'' only operate on arrays while your program is
+// _being compiled_. This special time is known in Zig
 // parlance as "comptime" and we'll learn plenty more about that
 // later.
 //
@@ -30,7 +26,8 @@ pub fn main() void {
     // (Problem 2)
     // Please set this array using repetition.
     // It should result in: 1 0 0 1 1 0 0 1 1 0 0 1
-    const bit_pattern = [_]u8{ ??? } ** 3;
+    const bit_pattern_unit = [_]u8{ ??? };
+    const bit_pattern: [3 * bit_pattern_unit.len]u8 = @bitCast(@as([3][bit_pattern_unit.len]u8, @splat(bit_pattern_unit)));
 
     // Okay, that's all of the problems. Let's see the results.
     //
