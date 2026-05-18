@@ -99,7 +99,7 @@ pub fn main() void {
     // 'fields' is a slice of StructFields. Here's the declaration:
     //
     //     pub const StructField = struct {
-    //         name: [:0]const u8,
+    //         name: [:0]const u8,      // Don't worry about `:0` yet!
     //         type: type,
     //         default_value_ptr: ?*const anyopaque,
     //         is_comptime: bool,
