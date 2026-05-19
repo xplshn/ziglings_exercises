@@ -1,5 +1,5 @@
 //
-// Zig has one array operators.
+// Zig has one array operator.
 //
 // You can use '++' to concatenate two arrays:
 //
@@ -7,7 +7,7 @@
 //   const b = [_]u8{ 3,4 };
 //   const c = a ++ b ++ [_]u8{ 5 }; // equals 1 2 3 4 5
 //
-// Note that '++'' only operate on arrays while your program is
+// Note that '++' only operates on arrays while your program is
 // _being compiled_. This special time is known in Zig
 // parlance as "comptime" and we'll learn plenty more about that
 // later.
