@@ -73,7 +73,7 @@
 // Operations performed on vectors in Zig will be done in parallel using
 // SIMD instructions, whenever possible.
 //
-// Defining vectors in Zig is straightforwards. No library import is needed.
+// Defining vectors in Zig is straightforward. No library import is needed.
 const v1 = @Vector(3, i32){ 1, 10, 100 };
 const v2 = @Vector(3, f32){ 2.0, 3.0, 5.0 };
 
