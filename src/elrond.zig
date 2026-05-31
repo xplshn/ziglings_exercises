@@ -1224,6 +1224,10 @@ const exercises = [_]Exercise{
         .output = "",
     },
     .{
+        .main_file = "116_defer3.zig",
+        .output = "42",
+    },
+    .{
         .main_file = "999_the_end.zig",
         .output =
         \\
