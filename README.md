@@ -193,7 +193,7 @@ Zig Standard Library
 
 ### Version Changes
 
-* 2026-05-31 zig 0.16.0-dev.2915 - zig build: separate the maker process from the configurer process, see[#35428](https://codeberg.org/ziglang/zig/pulls/35428) 
+* 2026-05-31 zig 0.17.0-dev.607 - zig build: separate the maker process from the configurer process, see[#35428](https://codeberg.org/ziglang/zig/pulls/35428) 
 * 2026-03-20 zig 0.16.0-dev.2915 - `GeneralPurposeAllocator` was changed to `DebugAllocator`
 * 2026-02-04 zig 0.16.0-dev.2471 - added process.Child.Cwd, see [#31090](https://codeberg.org/ziglang/zig/pulls/31090)
 * 2026-01-09 zig 0.16.0-dev.2075 - move randomness API to `std.Io`, see [#30709](https://codeberg.org/ziglang/zig/pulls/30709)
