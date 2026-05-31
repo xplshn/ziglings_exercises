@@ -36,10 +36,10 @@ pub fn main(init: std.process.Init) !void {
     const file = try output_dir.openFile(io, "zigling.txt", .{});
     defer file.close(io);
 
-    // initialize an array of u8 with all letter 'A'
+    // initialize an array of u8 entirely with the letter 'A'
     // we need to pick the size of the array, 64 seems like a good number
-    // fix the initialization below
-    var content = ['A']*64;
+    // do you remember the array repetition function?
+    var content: ??? = ???('A');
     // this should print out : `AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA`
     std.debug.print("{s}\n", .{content});
 
