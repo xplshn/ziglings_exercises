@@ -1150,7 +1150,7 @@ const exercises = [_]Exercise{
     },
     .{
         .main_file = "108_threading2.zig",
-        .output = "PI ≈ 3.14159265",
+        .output = "PI ≈ 3.14159265 (error = 1.0e-9)",
     },
     .{
         .main_file = "109_files.zig",
