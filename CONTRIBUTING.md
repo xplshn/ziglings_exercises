@@ -119,12 +119,12 @@ its patch too. That’s where our little helper Gollum comes in:
   1. In the project root, create a folder called `answers/`
   2. Put your solved version of the exercise file in there
   3. Back in the root, run:
-     `./patches/gollum <exercise-number>`<br>
-     For example: `./patches/gollum 106`
+     `./patches/gollum.sh <exercise-number>`<br>
+     For example: `./patches/gollum.sh 106`
      This will generate a shiny new patch.
 
 Double-check everything by asking the magical Eowyn:
-`./patches/eowyn`<br>
+`./patches/eowyn.sh`<br>
 If all tests pass: You are done!
 
 Don’t forget to commit the patch file.
