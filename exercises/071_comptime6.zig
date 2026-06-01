@@ -36,13 +36,14 @@ pub fn main() void {
     // statement was repeated three times almost verbatim. Yuck!
     //
     // Please use an 'inline for' to implement the block below
-    // for each field in the slice 'fields'!
+    // for each field in the corresponding slices (they're of the same length)!
 
-    const fields = @typeInfo(Narcissus).@"struct".fields;
+    const field_names = @typeInfo(Narcissus).@"struct".field_names;
+    const field_types = @typeInfo(Narcissus).@"struct".field_types;
 
     ??? {
-        if (field.type != void) {
-            print(" {s}", .{field.name});
+        if (field_type != void) {
+            print(" {s}", .{field_name});
         }
     }
 
