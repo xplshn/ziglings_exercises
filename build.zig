@@ -30,7 +30,7 @@ comptime {
     }
 }
 
-// Elrond owns the entire Ziglings logic now!
+// Elrond the Wise owns the entire Ziglings logic now!
 // build.zig only builds it and forwards the chosen options as CLI flags.
 // Building just this one Run step keeps the build output readable and lets
 // Elrond iterate without the configure-phase cache getting in the way.
@@ -46,6 +46,7 @@ pub fn build(b: *Build) !void {
     const rand = b.option(bool, "random", "Select random exercise");
     const start = b.option(usize, "s", "Start at exercise");
     const reset = b.option(bool, "reset", "Reset exercise progress");
+    const logo = b.option(bool, "logo", "Display Ziglings logo");
 
     const sep = std.fs.path.sep_str;
     const healed_path = if (override_healed_path) |path|
@@ -87,6 +88,8 @@ pub fn build(b: *Build) !void {
         run.addArg("--random");
     } else if (start) |s| {
         run.addArg(b.fmt("--start={d}", .{s}));
+    } else if (logo) |_| {
+        run.addArg("--logo");
     }
 
     const ziglings_step = b.step("ziglings", "Run ziglings");

@@ -1,4 +1,8 @@
-// Elrond: Ziglings' exercise checker and guide.
+//
+//     "You have a long way to go,
+//      and the path is not easy."
+//            Elrond, The Hobbit or The Fellowship of the Ring
+//
 //
 // In the reworked Zig build system (configurer/maker split) a build Step no
 // longer carries a `makeFn`, and the configure phase is cached and not re-run
@@ -33,10 +37,9 @@ pub const logo =
     \\
 ;
 
-// How Elrond was invoked.
+// How Elrond was called.
 const Mode = enum {
-    // `zig build`: iterate from after the last solved exercise to the first
-    // unsolved one (or the end).
+    // `zig build`: iterate from after the last solved exercise to the first unsolved one (or the end).
     normal,
     // `zig build -Dn=n`: check exactly one exercise.
     named,
@@ -57,8 +60,7 @@ pub const Exercise = struct {
     // main_file must have the format key_name.zig.
     main_file: []const u8,
 
-    // Desired output. A program passes if its output, excluding trailing
-    // whitespace, equals this string.
+    // Desired output. A program passes if its output, excluding trailing whitespace, equals this string.
     output: []const u8,
 
     // Optional hint shown if the program does not succeed.
@@ -86,11 +88,9 @@ pub const Exercise = struct {
         return std.fs.path.stem(self.main_file);
     }
 
-    // Key of the main file: the string before the '_' with zero padding
-    // removed. "001_hello.zig" -> "1".
+    // Key of the main file: the string before the '_' with zero padding removed. "001_hello.zig" -> "1".
     pub fn key(self: Exercise) []const u8 {
-        const end_index = std.mem.indexOfScalar(u8, self.main_file, '_') orelse
-            unreachable;
+        const end_index = std.mem.indexOfScalar(u8, self.main_file, '_') orelse unreachable;
         var start_index: usize = 0;
         while (self.main_file[start_index] == '0') start_index += 1;
         return self.main_file[start_index..end_index];
@@ -102,11 +102,13 @@ pub const Exercise = struct {
     }
 };
 
+// Ansi colors.
 var use_color_escapes = false;
 var red_text: []const u8 = "";
 var red_bold_text: []const u8 = "";
 var red_dim_text: []const u8 = "";
 var green_text: []const u8 = "";
+var yellow_text: []const u8 = "";
 var bold_text: []const u8 = "";
 var reset_text: []const u8 = "";
 
@@ -126,6 +128,7 @@ fn setupColors(io: std.Io) void {
         red_bold_text = "\x1b[31;1m";
         red_dim_text = "\x1b[31;2m";
         green_text = "\x1b[32m";
+        yellow_text = "\x1b[33m";
         bold_text = "\x1b[1m";
         reset_text = "\x1b[0m";
     }
@@ -133,9 +136,9 @@ fn setupColors(io: std.Io) void {
 
 pub fn main(init: std.process.Init) !void {
     const io = init.io;
-    const gpa = init.arena.allocator();
+    const arena = init.arena.allocator();
 
-    const args = try init.minimal.args.toSlice(gpa);
+    const args = try init.minimal.args.toSlice(arena);
 
     setupColors(io);
 
@@ -150,17 +153,7 @@ pub fn main(init: std.process.Init) !void {
     for (1..args.len) |n| {
         const arg = args[n];
         if (std.mem.eql(u8, arg, "--logo")) {
-            print("{s}", .{logo});
-            return;
-        } else if (std.mem.eql(u8, arg, "--reset")) {
-            std.Io.Dir.cwd().deleteFile(io, progress_filename) catch |err| switch (err) {
-                error.FileNotFound => {},
-                else => {
-                    print("Unable to remove progress file: {}\n", .{err});
-                    std.process.exit(1);
-                },
-            };
-            print("Progress reset, {s} removed.\n", .{progress_filename});
+            print("{s}{s}{s}", .{ yellow_text, logo, reset_text });
             return;
         } else if (prefix(arg, "--zig=")) |v| {
             zig_exe = v;
@@ -188,7 +181,7 @@ pub fn main(init: std.process.Init) !void {
 
     print("{s}", .{logo});
 
-    const ctx: Context = .{ .io = io, .gpa = gpa, .zig_exe = zig_exe, .work_path = work_path };
+    const ctx: Context = .{ .io = io, .arena = arena, .zig_exe = zig_exe, .work_path = work_path };
 
     switch (mode) {
         .named => {
@@ -220,7 +213,7 @@ pub fn main(init: std.process.Init) !void {
         },
         .normal => {
             // Start after the last solved exercise recorded in .progress.txt.
-            const solved = readProgress(io, gpa);
+            const solved = readProgress(io, arena);
             var start_index: usize = 0;
             for (exercises, 0..) |ex, idx| {
                 if (solved < ex.number()) {
@@ -245,15 +238,15 @@ fn prefix(arg: []const u8, pre: []const u8) ?[]const u8 {
 // Shared, read-only run context threaded through the helpers.
 const Context = struct {
     io: std.Io,
-    gpa: std.mem.Allocator,
+    arena: std.mem.Allocator,
     zig_exe: []const u8,
     work_path: []const u8,
 };
 
 const Error = error{Failed};
 
-// Iterates exercises from `start_index` to the end, stopping at the first
-// failure. Progress is written after each passed exercise.
+// Iterates exercises from `start_index` to the end, stopping at the first failure.
+// Progress is written after each passed exercise.
 fn iterateFrom(ctx: Context, start_index: usize) Error!void {
     for (exercises[start_index..]) |ex| {
         try runOne(ctx, ex, .normal);
@@ -284,12 +277,12 @@ fn runOne(ctx: Context, ex: Exercise, mode: Mode) Error!void {
         },
     }
 
-    writeProgress(ctx.io, ctx.gpa, ex.number()) catch {};
+    writeProgress(ctx.io, ctx.arena, ex.number()) catch {};
 }
 
 fn hintAndHelp(ex: Exercise, mode: Mode) void {
     if (ex.hint) |hint|
-        print("\n{s}Ziglings hint: {s}{s}", .{ bold_text, hint, reset_text });
+        print("\n{s}{s}Ziglings hint: {s}{s}", .{ bold_text, green_text, hint, reset_text });
     help(ex, mode);
 }
 
@@ -313,24 +306,22 @@ fn printProgress(num: usize, max: usize) void {
 
 fn runExe(ctx: Context, ex: Exercise) !void {
     const io = ctx.io;
-    const gpa = ctx.gpa;
+    const arena = ctx.arena;
     print("Compiling {s}...\n", .{ex.main_file});
 
-    const path = std.fs.path.join(gpa, &.{ ctx.work_path, ex.main_file }) catch
-        @panic("OOM");
+    const path = std.fs.path.join(arena, &.{ ctx.work_path, ex.main_file }) catch @panic("OOM");
 
-    var argv = std.ArrayList([]const u8).initCapacity(gpa, 8) catch @panic("OOM");
-    defer argv.deinit(gpa);
-    argv.append(gpa, ctx.zig_exe) catch @panic("OOM");
-    argv.append(gpa, "run") catch @panic("OOM");
+    var argv = std.ArrayList([]const u8).initCapacity(arena, 8) catch @panic("OOM");
+    argv.append(arena, ctx.zig_exe) catch @panic("OOM");
+    argv.append(arena, "run") catch @panic("OOM");
     if (ex.link_libc) {
-        argv.append(gpa, "-lc") catch @panic("OOM");
-        argv.append(gpa, "-fllvm") catch @panic("OOM");
+        argv.append(arena, "-lc") catch @panic("OOM");
+        argv.append(arena, "-fllvm") catch @panic("OOM");
     }
-    argv.append(gpa, path) catch @panic("OOM");
+    argv.append(arena, path) catch @panic("OOM");
 
     // `zig run` compiles and runs in one step using Zig's own cache.
-    const result = Process.run(gpa, io, .{
+    const result = Process.run(arena, io, .{
         .argv = argv.items,
         .stdout_limit = .limited(1024 * 1024),
         .stderr_limit = .limited(1024 * 1024),
@@ -344,28 +335,27 @@ fn runExe(ctx: Context, ex: Exercise) !void {
     resetLine();
     print("Checking {s}...\n", .{ex.main_file});
 
-    return checkOutput(io, gpa, ex, result);
+    return checkOutput(io, arena, ex, result);
 }
 
 fn runTest(ctx: Context, ex: Exercise) !void {
     const io = ctx.io;
-    const gpa = ctx.gpa;
+    const arena = ctx.arena;
     print("Compiling {s}...\n", .{ex.main_file});
 
-    const path = std.fs.path.join(gpa, &.{ ctx.work_path, ex.main_file }) catch
+    const path = std.fs.path.join(arena, &.{ ctx.work_path, ex.main_file }) catch
         @panic("OOM");
 
-    var argv = std.ArrayList([]const u8).initCapacity(gpa, 8) catch @panic("OOM");
-    defer argv.deinit(gpa);
-    argv.append(gpa, ctx.zig_exe) catch @panic("OOM");
-    argv.append(gpa, "test") catch @panic("OOM");
+    var argv = std.ArrayList([]const u8).initCapacity(arena, 8) catch @panic("OOM");
+    argv.append(arena, ctx.zig_exe) catch @panic("OOM");
+    argv.append(arena, "test") catch @panic("OOM");
     if (ex.link_libc) {
-        argv.append(gpa, "-lc") catch @panic("OOM");
-        argv.append(gpa, "-fllvm") catch @panic("OOM");
+        argv.append(arena, "-lc") catch @panic("OOM");
+        argv.append(arena, "-fllvm") catch @panic("OOM");
     }
-    argv.append(gpa, path) catch @panic("OOM");
+    argv.append(arena, path) catch @panic("OOM");
 
-    const result = Process.run(gpa, io, .{
+    const result = Process.run(arena, io, .{
         .argv = argv.items,
         .stdout_limit = .limited(1024 * 1024),
         .stderr_limit = .limited(1024 * 1024),
@@ -382,7 +372,7 @@ fn runTest(ctx: Context, ex: Exercise) !void {
     return checkTest(ex, result);
 }
 
-fn checkOutput(io: std.Io, gpa: std.mem.Allocator, ex: Exercise, result: Process.RunResult) !void {
+fn checkOutput(io: std.Io, arena: std.mem.Allocator, ex: Exercise, result: Process.RunResult) !void {
     switch (result.term) {
         .exited => |code| if (code != 0) {
             // `zig run` puts both compile errors and runtime panics on stderr;
@@ -400,7 +390,7 @@ fn checkOutput(io: std.Io, gpa: std.mem.Allocator, ex: Exercise, result: Process
     }
 
     const raw_output = if (ex.check_stdout) result.stdout else result.stderr;
-    const output = trimLines(gpa, raw_output) catch @panic("OOM");
+    const output = trimLines(arena, raw_output) catch @panic("OOM");
 
     var exercise_output = ex.output;
     if (ex.timestamp) {
@@ -477,28 +467,27 @@ fn resetLine() void {
 }
 
 // Removes trailing whitespace per line and any trailing LF at the end.
-fn trimLines(gpa: std.mem.Allocator, buf: []const u8) ![]const u8 {
-    var list = try std.ArrayList(u8).initCapacity(gpa, buf.len);
-    errdefer list.deinit(gpa);
+fn trimLines(arena: std.mem.Allocator, buf: []const u8) ![]const u8 {
+    var list = try std.ArrayList(u8).initCapacity(arena, buf.len);
 
     var iter = std.mem.splitSequence(u8, buf, " \n");
     while (iter.next()) |line| {
         const data = std.mem.trimEnd(u8, line, " \r");
-        try list.appendSlice(gpa, data);
-        try list.append(gpa, '\n');
+        try list.appendSlice(arena, data);
+        try list.append(arena, '\n');
     }
-    const result = try list.toOwnedSlice(gpa);
+    const result = try list.toOwnedSlice(arena);
     return std.mem.trimEnd(u8, result, "\n");
 }
 
 // Reads the last solved exercise number from .progress.txt; 0 if absent.
-fn readProgress(io: std.Io, gpa: std.mem.Allocator) u32 {
+fn readProgress(io: std.Io, arena: std.mem.Allocator) u32 {
     const file = std.Io.Dir.cwd().openFile(io, progress_filename, .{}) catch return 0;
     defer file.close(io);
 
     const size = file.length(io) catch return 0;
     if (size == 0) return 0;
-    const contents = gpa.alloc(u8, size) catch return 0;
+    const contents = arena.alloc(u8, size) catch return 0;
     var file_buffer: [1024]u8 = undefined;
     var reader = file.reader(io, &file_buffer);
     const n = reader.interface.readSliceShort(contents) catch return 0;
@@ -506,8 +495,8 @@ fn readProgress(io: std.Io, gpa: std.mem.Allocator) u32 {
     return std.fmt.parseInt(u32, trimmed, 10) catch 0;
 }
 
-fn writeProgress(io: std.Io, gpa: std.mem.Allocator, number: usize) !void {
-    const progress = try std.fmt.allocPrint(gpa, "{d}", .{number});
+fn writeProgress(io: std.Io, arena: std.mem.Allocator, number: usize) !void {
+    const progress = try std.fmt.allocPrint(arena, "{d}", .{number});
     const file = try std.Io.Dir.cwd().createFile(
         io,
         progress_filename,
@@ -968,9 +957,6 @@ const exercises = [_]Exercise{
         \\Grasshopper hopped 32 meters.
         , // pay attention to the comma
     },
-
-    // Skipped because of https://github.com/ratfactor/ziglings/issues/163
-    // direct link: https://github.com/ziglang/zig/issues/6025
     .{
         .main_file = "085_async.zig",
         .output = "Current time: <timestamp>s since epoch",
