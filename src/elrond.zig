@@ -693,7 +693,10 @@ const exercises = [_]Exercise{
     },
     .{
         .main_file = "028_defer2.zig",
-        .output = "(Goat) (Cat) (Dog) (Dog) (Goat) (Unknown) done.",
+        .output =
+        \\(Goat) (Cat) (Dog) (Dog) (Goat) (Unknown) done.
+        \\Answer to everything? 42
+        , // pay attention to the comma
     },
     .{
         .main_file = "029_errdefer.zig",
@@ -1222,10 +1225,6 @@ const exercises = [_]Exercise{
     .{
         .main_file = "115_packed2.zig",
         .output = "",
-    },
-    .{
-        .main_file = "116_defer3.zig",
-        .output = "42",
     },
     .{
         .main_file = "999_the_end.zig",
