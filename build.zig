@@ -58,7 +58,7 @@ pub fn build(b: *Build) !void {
     const elrond = b.addExecutable(.{
         .name = "elrond",
         .root_module = b.createModule(.{
-            .root_source_file = b.path("src/elrond.zig"),
+            .root_source_file = b.path("rivendell/elrond.zig"),
             .target = b.graph.host,
         }),
     });
