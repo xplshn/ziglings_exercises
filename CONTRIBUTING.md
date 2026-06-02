@@ -111,7 +111,7 @@ directory.
 
 Every Ziglings exercise contains mistakes on purpose.
 To keep our automated tests happy, each exercise also
-has a patch in `patches/healed` that “heals” it.
+has a patch in `patches/patches` that “heals” it.
 
 When you change an exercise, you will usually need to update
 its patch too. That’s where our little helper Gollum comes in:
