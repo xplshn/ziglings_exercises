@@ -1,10 +1,10 @@
---- exercises/110_files2.zig	2026-05-04 17:08:38.913033915 +0200
-+++ answers/110_files2.zig	2026-05-04 17:08:37.112995948 +0200
+--- exercises/110_files2.zig	2026-05-31 14:54:55.061019159 +0200
++++ answers/110_files2.zig	2026-05-31 14:54:42.655691238 +0200
 @@ -39,7 +39,7 @@
-     // initialize an array of u8 with all letter 'A'
+     // initialize an array of u8 entirely with the letter 'A'
      // we need to pick the size of the array, 64 seems like a good number
-     // fix the initialization below
--    var content = ['A']*64;
+     // do you remember the array repetition function?
+-    var content: ??? = ???('A');
 +    var content: [64]u8 = @splat('A');
      // this should print out : `AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA`
      std.debug.print("{s}\n", .{content});
