@@ -44,7 +44,7 @@ in that case, you can download it directly from the [build directory](https://zi
 Verify the installation and build number of `zig` like so:
 
 ```
-$ zig version
+zig version
 0.17.0-dev.xxxx+xxxxxxxxx
 ```
 
