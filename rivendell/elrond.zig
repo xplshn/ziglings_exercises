@@ -21,6 +21,7 @@ const builtin = @import("builtin");
 
 const Process = std.process;
 const print = std.debug.print;
+const cutPrefix = std.mem.cutPrefix;
 
 const progress_filename = ".progress.txt";
 
@@ -102,6 +103,16 @@ pub const Exercise = struct {
     }
 };
 
+// Shared, read-only run context threaded through the helpers.
+const Context = struct {
+    io: std.Io,
+    arena: std.mem.Allocator,
+    zig_exe: []const u8,
+    work_path: []const u8,
+};
+
+const Error = error{Failed};
+
 // Ansi colors.
 var use_color_escapes = false;
 var red_text: []const u8 = "";
@@ -138,7 +149,8 @@ pub fn main(init: std.process.Init) !void {
     const io = init.io;
     const arena = init.arena.allocator();
 
-    const args = try init.minimal.args.toSlice(arena);
+    var args_it = try init.minimal.args.iterateAllocator(arena);
+    if (!args_it.skip()) @panic("expected self arg");
 
     setupColors(io);
 
@@ -150,22 +162,21 @@ pub fn main(init: std.process.Init) !void {
     var only_n: ?usize = null;
     var start_n: ?usize = null;
 
-    for (1..args.len) |n| {
-        const arg = args[n];
+    while (args_it.next()) |arg| {
         if (std.mem.eql(u8, arg, "--logo")) {
             print("{s}{s}{s}", .{ yellow_text, logo, reset_text });
             return;
-        } else if (prefix(arg, "--zig=")) |v| {
+        } else if (cutPrefix(u8, arg, "--zig=")) |v| {
             zig_exe = v;
-        } else if (prefix(arg, "--work-path=")) |v| {
+        } else if (cutPrefix(u8, arg, "--work-path=")) |v| {
             work_path = v;
-        } else if (prefix(arg, "--only=")) |v| {
+        } else if (cutPrefix(u8, arg, "--only=")) |v| {
             only_n = std.fmt.parseInt(usize, v, 10) catch {
                 print("invalid --only value: {s}\n", .{v});
                 std.process.exit(1);
             };
             mode = .named;
-        } else if (prefix(arg, "--start=")) |v| {
+        } else if (cutPrefix(u8, arg, "--start=")) |v| {
             start_n = std.fmt.parseInt(usize, v, 10) catch {
                 print("invalid --start value: {s}\n", .{v});
                 std.process.exit(1);
@@ -181,7 +192,12 @@ pub fn main(init: std.process.Init) !void {
 
     print("{s}", .{logo});
 
-    const ctx: Context = .{ .io = io, .arena = arena, .zig_exe = zig_exe, .work_path = work_path };
+    const ctx: Context = .{
+        .io = io,
+        .arena = arena,
+        .zig_exe = zig_exe,
+        .work_path = work_path,
+    };
 
     switch (mode) {
         .named => {
@@ -229,21 +245,6 @@ pub fn main(init: std.process.Init) !void {
         },
     }
 }
-
-fn prefix(arg: []const u8, pre: []const u8) ?[]const u8 {
-    if (std.mem.startsWith(u8, arg, pre)) return arg[pre.len..];
-    return null;
-}
-
-// Shared, read-only run context threaded through the helpers.
-const Context = struct {
-    io: std.Io,
-    arena: std.mem.Allocator,
-    zig_exe: []const u8,
-    work_path: []const u8,
-};
-
-const Error = error{Failed};
 
 // Iterates exercises from `start_index` to the end, stopping at the first failure.
 // Progress is written after each passed exercise.
