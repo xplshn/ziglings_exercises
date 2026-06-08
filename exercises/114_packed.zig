@@ -78,7 +78,7 @@ const FLG = packed struct(u8) {
     content_checksum: bool,
     content_size: bool,
     block_checksum: bool,
-    block_indepencence: bool,
+    block_independence: bool,
     version: u2,
 };
 
