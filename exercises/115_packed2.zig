@@ -1,5 +1,5 @@
 //
-// We've already learned about switch statements in exercises 030, 031 and 108.
+// We've already learned about switch statements in exercises 030, 031 and 111.
 // They also work with packed containers:
 
 const S = packed struct(u2) {
