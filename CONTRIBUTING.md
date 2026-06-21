@@ -8,11 +8,11 @@ of Ziglings Maintenance!
 
 Ziglings is intended for programmers of all experience levels. No
 specific language knowledge is expected. Anyone who can install
-the current Zig snapshot, setup a copy of Ziglings, and knows
+the current Zig snapshot, set up a copy of Ziglings, and knows
 common language building blocks (if/then/else, loops, and
 functions) is ready for Ziglings.
 
-Zigling's excercises are self-contained. If you can't solve
+Zigling's exercises are self-contained. If you can't solve
 an exercise from the information you've gleaned so far from
 Ziglings, then the exercise probably needs some additional work.
 Please file an issue!
