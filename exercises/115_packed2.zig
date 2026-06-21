@@ -51,7 +51,7 @@ comptime {
 //
 // Try to make the float below negative:
 
-/// IEEE 754 half precision float
+// IEEE 754 binary16 floating-point format
 const Float = packed union(u16) {
     value: f16,
     bits: packed struct(u16) {
