@@ -74,9 +74,9 @@ pub fn main() !void {
     // before the parallel processing begins.
     std.debug.print("Starting work...\n", .{});
 
-    // These curly brackets are very important, they are necessary
+    // These curly braces are very important, they are necessary
     // to enclose the area where the threads are called.
-    // Without these brackets, the program would not wait for the
+    // Without these braces, the program would not wait for the
     // end of the threads and they would continue to run beyond the
     // end of the program.
     {
