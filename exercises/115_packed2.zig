@@ -55,7 +55,7 @@ comptime {
 const Float = packed union(u16) {
     value: f16,
     bits: packed struct(u16) {
-        mantissa: u10,
+        significand: u10,
         exponent: u5,
         sign: u1,
     },
