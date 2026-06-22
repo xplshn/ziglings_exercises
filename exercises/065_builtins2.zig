@@ -47,7 +47,7 @@ const Narcissus = struct {
     myself: *Narcissus = undefined,
     echo: void = undefined, // Alas, poor Echo!
 
-    fn fetchTheMostBeautifulType() type {
+    fn FetchTheMostBeautifulType() type {
         return @This();
     }
 };
@@ -70,7 +70,7 @@ pub fn main() void {
     //
     // The fix for this is very subtle, but it makes a big
     // difference!
-    const Type2 = narcissus.fetchTheMostBeautifulType();
+    const Type2 = narcissus.FetchTheMostBeautifulType();
 
     // Now we print a pithy statement about Narcissus.
     print("A {s} loves all {s}es. ", .{

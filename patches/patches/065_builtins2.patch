@@ -13,8 +13,8 @@
      //
      // The fix for this is very subtle, but it makes a big
      // difference!
--    const Type2 = narcissus.fetchTheMostBeautifulType();
-+    const Type2 = Narcissus.fetchTheMostBeautifulType();
+-    const Type2 = narcissus.FetchTheMostBeautifulType();
++    const Type2 = Narcissus.FetchTheMostBeautifulType();
  
      // Now we print a pithy statement about Narcissus.
      print("A {s} loves all {s}es. ", .{

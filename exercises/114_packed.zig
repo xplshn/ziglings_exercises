@@ -1,6 +1,6 @@
 //
 // We've already learned plenty about bit manipulation using bitwise operations
-// in exercises 097 and 098 and in quiz 110. The techniques we already know work
+// in exercises 100 and 101 and in quiz 113. The techniques we already know work
 // just fine, but creating masks and shifting individual bits around can become
 // quite tedious and unwieldy pretty quickly.
 // What if there was a better, a more convenient way to control individual bits?
@@ -78,7 +78,7 @@ const FLG = packed struct(u8) {
     content_checksum: bool,
     content_size: bool,
     block_checksum: bool,
-    block_indepencence: bool,
+    block_independence: bool,
     version: u2,
 };
 
