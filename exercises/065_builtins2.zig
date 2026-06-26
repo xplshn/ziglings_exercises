@@ -94,7 +94,7 @@ pub fn main() void {
     print("He has room in his heart for:", .{});
 
     // `field_names` is a slice of strings and it holds the names of the struct's fields
-    // `field_types` is a slice of strings and it holds the types of the struct's fields,
+    // `field_types` is a slice of types and it holds the types of the struct's fields,
     //               it is guaranteed to be the same length as `field_names`
     const field_names = @typeInfo(Narcissus).@"struct".field_names;
     const field_types = @typeInfo(Narcissus).@"struct".field_types;
