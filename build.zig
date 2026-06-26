@@ -81,6 +81,7 @@ pub fn build(b: *Build) !void {
     const run = b.addRunArtifact(elrond);
     run.addArg(b.fmt("--zig={s}", .{b.graph.zig_exe}));
     run.addArg(b.fmt("--work-path={s}", .{work_path}));
+    run.addArg(b.fmt("--root-path={s}", .{b.root.root_dir.path.?}));
 
     if (exno) |n| {
         run.addArg(b.fmt("--only={d}", .{n}));

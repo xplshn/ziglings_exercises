@@ -109,6 +109,7 @@ const Context = struct {
     arena: std.mem.Allocator,
     zig_exe: []const u8,
     work_path: []const u8,
+    root_path: []const u8,
 };
 
 const Error = error{Failed};
@@ -158,6 +159,7 @@ pub fn main(init: std.process.Init) !void {
 
     var zig_exe: []const u8 = "zig";
     var work_path: []const u8 = "exercises";
+    var root_path: []const u8 = "";
     var mode: Mode = .normal;
     var only_n: ?usize = null;
     var start_n: ?usize = null;
@@ -170,6 +172,8 @@ pub fn main(init: std.process.Init) !void {
             zig_exe = v;
         } else if (cutPrefix(u8, arg, "--work-path=")) |v| {
             work_path = v;
+        } else if (cutPrefix(u8, arg, "--root-path=")) |v| {
+            root_path = v;
         } else if (cutPrefix(u8, arg, "--only=")) |v| {
             only_n = std.fmt.parseInt(usize, v, 10) catch {
                 print("invalid --only value: {s}\n", .{v});
@@ -197,6 +201,7 @@ pub fn main(init: std.process.Init) !void {
         .arena = arena,
         .zig_exe = zig_exe,
         .work_path = work_path,
+        .root_path = root_path,
     };
 
     switch (mode) {
@@ -310,7 +315,7 @@ fn runExe(ctx: Context, ex: Exercise) !void {
     const arena = ctx.arena;
     print("Compiling {s}...\n", .{ex.main_file});
 
-    const path = std.fs.path.join(arena, &.{ ctx.work_path, ex.main_file }) catch @panic("OOM");
+    const path = std.fs.path.join(arena, &.{ ctx.root_path, ctx.work_path, ex.main_file }) catch @panic("OOM");
 
     var argv = std.ArrayList([]const u8).initCapacity(arena, 8) catch @panic("OOM");
     argv.append(arena, ctx.zig_exe) catch @panic("OOM");
