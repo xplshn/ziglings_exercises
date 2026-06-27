@@ -599,8 +599,6 @@ const exercises = [_]Exercise{
         .main_file = "005_arrays2.zig",
         .output = "LEET: 1337, Bits: 100110011001",
         .hint = "Fill in the two arrays.",
-        .skip = true,
-        .skip_hint = "Better solution is needed.",
     },
     .{
         .main_file = "006_strings.zig",
