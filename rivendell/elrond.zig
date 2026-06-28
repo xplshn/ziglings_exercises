@@ -19,11 +19,27 @@
 const std = @import("std");
 const builtin = @import("builtin");
 
+const Io = std.Io;
+const File = Io.File;
 const Process = std.process;
+const Terminal = std.Io.Terminal;
 const print = std.debug.print;
 const cutPrefix = std.mem.cutPrefix;
 
 const progress_filename = ".progress.txt";
+
+const no_colors_help =
+    \\Colors are not available.  Check the NO_COLOR environ variable.
+    \\
+    \\
+;
+
+const windows_colors_help =
+    \\Windows colors are not supported.
+    \\Install Windows Terminal or update to a more recent Windows version.
+    \\
+    \\
+;
 
 pub const logo =
     \\         _       _ _
@@ -114,37 +130,18 @@ const Context = struct {
 
 const Error = error{Failed};
 
-// Ansi colors.
-var use_color_escapes = false;
-var red_text: []const u8 = "";
-var red_bold_text: []const u8 = "";
-var red_dim_text: []const u8 = "";
-var green_text: []const u8 = "";
-var yellow_text: []const u8 = "";
-var bold_text: []const u8 = "";
-var reset_text: []const u8 = "";
+var stderr_term_mode: Terminal.Mode = .no_color;
 
-fn setupColors(io: std.Io) void {
-    use_color_escapes = false;
-    const stderr = std.Io.File.stderr();
-    if (stderr.supportsAnsiEscapeCodes(io)) |ok| {
-        if (ok) use_color_escapes = true;
-    } else |_| {}
-    if (!use_color_escapes and builtin.os.tag == .windows) {
-        if (stderr.enableAnsiEscapeCodes(io)) {
-            use_color_escapes = true;
-        } else |_| {}
-    }
-    if (use_color_escapes) {
-        red_text = "\x1b[31m";
-        red_bold_text = "\x1b[31;1m";
-        red_dim_text = "\x1b[31;2m";
-        green_text = "\x1b[32m";
-        yellow_text = "\x1b[33m";
-        bold_text = "\x1b[1m";
-        reset_text = "\x1b[0m";
-    }
-}
+// Ansi colors.
+const C = struct {
+    var red: []const u8 = "\x1b[31m";
+    var red_bold: []const u8 = "\x1b[31;1m";
+    var red_dim: []const u8 = "\x1b[31;2m";
+    var green: []const u8 = "\x1b[32m";
+    var yellow: []const u8 = "\x1b[33m";
+    var bold: []const u8 = "\x1b[1m";
+    var reset: []const u8 = "\x1b[0m";
+};
 
 pub fn main(init: std.process.Init) !void {
     const io = init.io;
@@ -153,7 +150,31 @@ pub fn main(init: std.process.Init) !void {
     var args_it = try init.minimal.args.iterateAllocator(arena);
     if (!args_it.skip()) @panic("expected self arg");
 
-    setupColors(io);
+    const stderr = File.stderr();
+
+    // Setup colors.
+    const NO_COLOR = try init.minimal.environ.containsUnempty(arena, "NO_COLOR");
+    const CLICOLOR_FORCE = try init.minimal.environ.containsUnempty(arena, "CLICOLOR_FORCE");
+
+    const term_mode = try Terminal.Mode.detect(io, stderr, NO_COLOR, CLICOLOR_FORCE);
+    stderr_term_mode = term_mode;
+
+    // Show help in case colors are not available or not supported.
+    switch (term_mode) {
+        .no_color => print(no_colors_help, .{}),
+        .escape_codes => {},
+        .windows_api => print(windows_colors_help, .{}),
+    }
+
+    if (term_mode == .no_color) {
+        C.red = "";
+        C.red_bold = "";
+        C.red_dim = "";
+        C.green = "";
+        C.yellow = "";
+        C.bold = "";
+        C.reset = "";
+    }
 
     if (!validateExercises()) std.process.exit(1);
 
@@ -166,7 +187,7 @@ pub fn main(init: std.process.Init) !void {
 
     while (args_it.next()) |arg| {
         if (std.mem.eql(u8, arg, "--logo")) {
-            print("{s}{s}{s}", .{ yellow_text, logo, reset_text });
+            print("{s}{s}{s}", .{ C.yellow, logo, C.reset });
             return;
         } else if (cutPrefix(u8, arg, "--zig=")) |v| {
             zig_exe = v;
@@ -243,7 +264,7 @@ pub fn main(init: std.process.Init) !void {
                 }
             } else {
                 // All solved.
-                print("{s}All exercises completed!{s}\n", .{ green_text, reset_text });
+                print("{s}All exercises completed!{s}\n", .{ C.green, C.reset });
                 return;
             }
             iterateFrom(ctx, start_index) catch std.process.exit(1);
@@ -265,7 +286,7 @@ fn runOne(ctx: Context, ex: Exercise, mode: Mode) Error!void {
     if (ex.skip) {
         print("Skipping {s}", .{ex.main_file});
         if (ex.skip_hint) |hint|
-            print("\n{s}Reason: {s}{s}\n", .{ bold_text, hint, reset_text });
+            print("\n{s}Reason: {s}{s}\n", .{ C.bold, hint, C.reset });
         print("\n\n", .{});
         return;
     }
@@ -288,7 +309,7 @@ fn runOne(ctx: Context, ex: Exercise, mode: Mode) Error!void {
 
 fn hintAndHelp(ex: Exercise, mode: Mode) void {
     if (ex.hint) |hint|
-        print("\n{s}{s}Ziglings hint: {s}{s}", .{ bold_text, green_text, hint, reset_text });
+        print("\n{s}{s}Ziglings hint: {s}{s}", .{ C.bold, C.green, hint, C.reset });
     help(ex, mode);
 }
 
@@ -333,7 +354,7 @@ fn runExe(ctx: Context, ex: Exercise) !void {
         .stderr_limit = .limited(1024 * 1024),
     }) catch |err| {
         print("{s}error:{s} unable to run {s}: {s}\n", .{
-            red_bold_text, reset_text, ex.main_file, @errorName(err),
+            C.red_bold, C.reset, ex.main_file, @errorName(err),
         });
         return err;
     };
@@ -367,7 +388,7 @@ fn runTest(ctx: Context, ex: Exercise) !void {
         .stderr_limit = .limited(1024 * 1024),
     }) catch |err| {
         print("{s}error:{s} unable to run test {s}: {s}\n", .{
-            red_bold_text, reset_text, ex.main_file, @errorName(err),
+            C.red_bold, C.reset, ex.main_file, @errorName(err),
         });
         return err;
     };
@@ -389,7 +410,7 @@ fn checkOutput(io: std.Io, arena: std.mem.Allocator, ex: Exercise, result: Proce
         },
         else => {
             print("{s}{s} terminated unexpectedly{s}\n", .{
-                red_bold_text, ex.main_file, reset_text,
+                C.red_bold, ex.main_file, C.reset,
             });
             return Error.Failed;
         },
@@ -424,8 +445,6 @@ fn checkOutput(io: std.Io, arena: std.mem.Allocator, ex: Exercise, result: Proce
     }
 
     if (!std.mem.eql(u8, output, exercise_output)) {
-        const red = red_bold_text;
-        const reset = reset_text;
         print(
             \\
             \\{s}========= expected this output: =========={s}
@@ -433,11 +452,11 @@ fn checkOutput(io: std.Io, arena: std.mem.Allocator, ex: Exercise, result: Proce
             \\{s}========= but found: ====================={s}
             \\{s}
             \\{s}=========================================={s}
-        ++ "\n", .{ red, reset, exercise_output, red, reset, output, red, reset });
+        ++ "\n", .{ C.red_bold, C.reset, exercise_output, C.red_bold, C.reset, output, C.red_bold, C.reset });
         return Error.Failed;
     }
 
-    print("{s}PASSED:\n{s}{s}\n\n", .{ green_text, output, reset_text });
+    print("{s}PASSED:\n{s}{s}\n\n", .{ C.green, output, C.reset });
 }
 
 fn checkTest(ex: Exercise, result: Process.RunResult) !void {
@@ -449,12 +468,12 @@ fn checkTest(ex: Exercise, result: Process.RunResult) !void {
         },
         else => {
             print("{s}{s} terminated unexpectedly{s}\n", .{
-                red_bold_text, ex.main_file, reset_text,
+                C.red_bold, ex.main_file, C.reset,
             });
             return Error.Failed;
         },
     }
-    print("{s}PASSED{s}\n\n", .{ green_text, reset_text });
+    print("{s}PASSED{s}\n\n", .{ C.green, C.reset });
 }
 
 fn help(ex: Exercise, mode: Mode) void {
@@ -464,12 +483,12 @@ fn help(ex: Exercise, mode: Mode) void {
         .random => "zig build -Drandom",
     };
     print("\n{s}Edit exercises/{s} and run '{s}' again.{s}\n", .{
-        red_bold_text, ex.main_file, cmd, reset_text,
+        C.red_bold, ex.main_file, cmd, C.reset,
     });
 }
 
 fn resetLine() void {
-    if (use_color_escapes) print("{s}", .{"\x1b[2K\r"});
+    if (stderr_term_mode == .escape_codes) print("{s}", .{"\x1b[2K\r"});
 }
 
 // Removes trailing whitespace per line and any trailing LF at the end.
