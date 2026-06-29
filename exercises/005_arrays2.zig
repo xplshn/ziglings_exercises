@@ -26,8 +26,13 @@ pub fn main() void {
     // (Problem 2)
     // Please set this array using repetition.
     // It should result in: 1 0 0 1 1 0 0 1 1 0 0 1
-    const bit_pattern_unit = [_]u8{ ??? };
-    const bit_pattern: [3 * bit_pattern_unit.len]u8 = @bitCast(@as([3][bit_pattern_unit.len]u8, @splat(bit_pattern_unit)));
+    const bit_pattern_unit = ???;
+
+    // How long should the bit pattern be?
+    const len = ???;
+
+    // For now, don't worry about the use of SIMD.
+    const bit_pattern: [len]u8 = std.simd.repeat(len, bit_pattern_unit);
 
     // Okay, that's all of the problems. Let's see the results.
     //
@@ -53,3 +58,12 @@ pub fn main() void {
 
     std.debug.print("\n", .{});
 }
+
+// For the curious:
+//
+// The `std.simd.repeat` function takes a target length and a pattern,
+// and returns a vector filled with that pattern repeated to the
+// desired length.
+//
+// For example, `repeat(5, [_]u8{1, 2})` will return a vector
+// equivalent to `.{1, 2, 1, 2, 1}`.

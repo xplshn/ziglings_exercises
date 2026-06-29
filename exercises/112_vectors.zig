@@ -145,3 +145,7 @@ pub fn main() void {
     print("Max difference (old fn): {d: >5.3}\n", .{mpd_old});
     print("Max difference (new fn): {d: >5.3}\n", .{mpd_new});
 }
+
+// Another cool feature of Vectors is repeating patterns.
+// Remember the arrays exercise from earlier where we created an array
+// by repeating a pattern? See `005_arrays2.zig`.
