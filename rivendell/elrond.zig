@@ -370,8 +370,7 @@ fn runTest(ctx: Context, ex: Exercise) !void {
     const arena = ctx.arena;
     print("Compiling {s}...\n", .{ex.main_file});
 
-    const path = std.fs.path.join(arena, &.{ ctx.work_path, ex.main_file }) catch
-        @panic("OOM");
+    const path = std.fs.path.join(arena, &.{ ctx.root_path, ctx.work_path, ex.main_file }) catch @panic("OOM");
 
     var argv = std.ArrayList([]const u8).initCapacity(arena, 8) catch @panic("OOM");
     argv.append(arena, ctx.zig_exe) catch @panic("OOM");
