@@ -104,6 +104,11 @@ fn thread_pi(pi: *f64, begin: u64, count: u64) !void {
 // is created. Otherwise the debug functions slow down the speed
 // to such an extent that seconds become minutes during execution.
 //
+// You can use the following command to build and run this
+// exercise with the "ReleaseFast" flag:
+//
+//      zig run exercises/108_threading2.zig -O ReleaseFast
+//
 // And you should remove the formatting restriction in "print",
 // otherwise you will not be able to see the additional digits.
 //
