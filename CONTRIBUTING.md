@@ -95,7 +95,7 @@ interface.  Specifically:
   eternal Ziglings contributor glory is yours!
 
 
-## Licence
+## License
 
 If you submit your contribution to the repository/project,
 you agree that your contribution will be licensed under
