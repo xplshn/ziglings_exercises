@@ -359,7 +359,6 @@ fn runExe(ctx: Context, ex: Exercise) !void {
         return err;
     };
 
-    resetLine();
     print("Checking {s}...\n", .{ex.main_file});
 
     return checkOutput(io, arena, ex, result);
@@ -392,7 +391,6 @@ fn runTest(ctx: Context, ex: Exercise) !void {
         return err;
     };
 
-    resetLine();
     print("Checking {s}...\n", .{ex.main_file});
 
     return checkTest(ex, result);
@@ -484,10 +482,6 @@ fn help(ex: Exercise, mode: Mode) void {
     print("\n{s}Edit exercises/{s} and run '{s}' again.{s}\n", .{
         C.red_bold, ex.main_file, cmd, C.reset,
     });
-}
-
-fn resetLine() void {
-    if (stderr_term_mode == .escape_codes) print("{s}", .{"\x1b[2K\r"});
 }
 
 // Removes trailing whitespace per line and any trailing LF at the end.
