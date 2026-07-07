@@ -36,5 +36,5 @@ pub fn main(init: std.process.Init) !void {
 // 'std.debug.print()' prints its output to stderr, while the stdout_writer
 // approach prints to stdout.
 // A common practice is to pipe output of a command to other commands,
-// and in order for the piping to work, those commands expect thier input
+// and in order for the piping to work, those commands expect their input
 // to come from stdout, not stderr.
