@@ -1,5 +1,5 @@
---- exercises/070_comptime5.zig	2023-10-03 22:15:22.125574535 +0200
-+++ answers/070_comptime5.zig	2023-10-05 20:04:07.159435482 +0200
+--- exercises/070_comptime5.zig	2026-08-31 13:28:01.202098783 +0200
++++ answers/070_comptime5.zig	2026-08-31 13:27:33.431493595 +0200
 @@ -123,8 +123,8 @@
      // Please make sure MyType has both waddle() and quack()
      // methods:
