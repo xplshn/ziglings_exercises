@@ -3,9 +3,6 @@ const builtin = @import("builtin");
 const Build = std.Build;
 const print = std.debug.print;
 
-// When changing this version, be sure to also update README.md in two places:
-//     1) Getting Started
-//     2) Version Changes
 comptime {
     const required_zig = "0.17.0-dev.607";
     const current_zig = builtin.zig_version;

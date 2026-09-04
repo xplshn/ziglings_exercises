@@ -1,0 +1,15 @@
+.{
+    .name = .ziglings,
+    .version = "1.0.0",
+    .fingerprint = 0xe8787dec1d2ef9f8,
+    // When changing this version, be sure to also update:
+    // * README.md
+    //   - Getting Started
+    //   - Version Changes
+    // * build.zig:
+    //   - comptime block at the top
+    .minimum_zig_version = "0.17.0-dev.607",
+    .paths = .{
+        "README.md",
+    },
+}
