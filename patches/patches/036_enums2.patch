@@ -1,5 +1,5 @@
---- exercises/036_enums2.zig	2026-07-21 20:48:50.596099259 +0200
-+++ answers/036_enums2.zig	2026-07-21 20:50:14.726826859 +0200
+--- exercises/036_enums2.zig	2026-09-25 12:30:04.603307727 +0200
++++ answers/036_enums2.zig	2026-09-25 12:29:07.512072819 +0200
 @@ -31,7 +31,7 @@
  const Color = enum(u32) {
      red = 0xff0000,
@@ -18,11 +18,9 @@
          \\</p>
          \\
      , .{
--        @intFromEnum(Color.red),
--        @intFromEnum(Color.green),
--        @intFromEnum(???), // Oops! We're missing something!
-+        @backingInt(Color.red),
-+        @backingInt(Color.green),
+         @backingInt(Color.red),
+         @backingInt(Color.green),
+-        @backingInt(???), // Oops! We're missing something!
 +        @backingInt(Color.blue), // Oops! We're missing something!
      });
  }

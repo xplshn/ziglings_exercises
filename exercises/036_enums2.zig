@@ -57,8 +57,8 @@ pub fn main() void {
         \\</p>
         \\
     , .{
-        @intFromEnum(Color.red),
-        @intFromEnum(Color.green),
-        @intFromEnum(???), // Oops! We're missing something!
+        @backingInt(Color.red),
+        @backingInt(Color.green),
+        @backingInt(???), // Oops! We're missing something!
     });
 }
