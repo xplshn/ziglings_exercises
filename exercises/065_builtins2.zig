@@ -7,7 +7,7 @@
 // ...and lots of type casting operations such as...
 //
 //      @as          @errorFromInt  @floatFromInt
-//      @ptrFromInt  @intFromPtr    @intFromEnum
+//      @ptrFromInt  @intFromPtr    @backingInt
 //
 // Spending part of a rainy day skimming through the complete
 // list of builtins in the official Zig documentation wouldn't be
