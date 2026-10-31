@@ -224,9 +224,9 @@ const NotebookEntry = struct {
 // +---+----------------+----------------+----------+
 //
 const HermitsNotebook = struct {
-    // Remember the array repetition function @splat()? It is a great way
-    // to assign multiple items in an array without having to list them
-    // one by one. Here we use it to initialize an array with null values.
+    // @splat() is a great way to assign multiple items in an array without
+    // having to list them one by one. Here we use it to initialize an array
+    // with null values.
     entries: [place_count]?NotebookEntry = @splat(null),
 
     // The next entry keeps track of where we are in our "todo" list.

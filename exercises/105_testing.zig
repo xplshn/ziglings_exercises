@@ -85,10 +85,10 @@ fn divide(a: f16, b: f16) !f16 {
 }
 
 test "divide" {
-    try testing.expect(divide(2, 2) catch unreachable == 1);
-    try testing.expect(divide(-1, -1) catch unreachable == 1);
-    try testing.expect(divide(10, 2) catch unreachable == 5);
-    try testing.expect(divide(1, 3) catch unreachable == 0.3333333333333333);
+    try testing.expect((divide(2, 2) catch unreachable) == 1);
+    try testing.expect((divide(-1, -1) catch unreachable) == 1);
+    try testing.expect((divide(10, 2) catch unreachable) == 5);
+    try testing.expect((divide(1, 3) catch unreachable) == 0.3333333333333333);
 
     // Now we test if the function returns an error if we pass a zero as
     // denominator. But which error needs to be tested?

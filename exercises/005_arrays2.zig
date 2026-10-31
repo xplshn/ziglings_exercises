@@ -26,6 +26,7 @@ pub fn main() void {
     // (Problem 2)
     // Please set this array using repetition.
     // It should result in: 1 0 0 1 1 0 0 1 1 0 0 1
+    // To solve this problem, please continue reading.
     const bit_pattern_unit = ???;
 
     // How long should the bit pattern be?

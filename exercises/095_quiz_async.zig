@@ -163,14 +163,14 @@ fn printGardenReport(weather: *GardenWeather) void {
 // Further reading for the curious:
 //
 // This quiz covered the main async I/O primitives:
-//   io.async()              - launch a task (may run inline)
-//   io.concurrent()         - guaranteed unit of concurrency
-//   Future.await/cancel     - collect or cancel a single task
+//   io.async()               - launch a task (may run inline)
+//   io.concurrent()          - guaranteed unit of concurrency
+//   Future.await/cancel      - collect or cancel a single task
 //   Group.async/await/cancel - manage fire-and-forget tasks
-//   Select.async/await      - race tasks, act on first completion
-//   Queue                   - bounded channel between tasks
-//   Mutex                   - protect shared state
-//   CancelProtection        - shield critical sections
+//   Select.async/await       - race tasks, act on first completion
+//   Queue                    - bounded channel between tasks
+//   Mutex                    - protect shared state
+//   CancelProtection         - shield critical sections
 //
 // There are more synchronization primitives we didn't cover:
 //   Condition  - wait for a condition to become true
