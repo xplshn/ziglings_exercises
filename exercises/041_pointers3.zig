@@ -1,7 +1,7 @@
 //
 // The tricky part is that the pointer's mutability (var vs const) refers
-// to the ability to change what the pointer POINTS TO, not the ability
-// to change the VALUE at that location!
+// to the ability to change WHERE the pointer POINTS TO, not the ability
+// to change the VALUE stored at the location the pointer points to!
 //
 //     const locked: u8 = 5;
 //     var unlocked: u8 = 10;
