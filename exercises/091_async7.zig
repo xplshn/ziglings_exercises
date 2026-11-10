@@ -10,10 +10,10 @@
 //     // ... critical section: safe to modify shared data ...
 //
 // Without the mutex, concurrent tasks could read and write the
-// same memory simultaneously, causing a data race — the result
+// same memory simultaneously, causing a data race - the result
 // would be unpredictable.
 //
-// mutex.lock() is a cancellation point — it can return
+// mutex.lock() is a cancellation point - it can return
 // error.Canceled. There's also tryLock() which returns
 // immediately (true if acquired, false if not).
 //

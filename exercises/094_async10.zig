@@ -1,10 +1,10 @@
 //
 // In exercise 089, we learned that cancellation happens at
-// "cancellation points" — any Io function that can return
+// "cancellation points" - any Io function that can return
 // error.Canceled.
 //
 // But sometimes a task has a critical section that MUST NOT
-// be interrupted — for example, writing a consistent state
+// be interrupted - for example, writing a consistent state
 // to disk, or completing a transaction.
 //
 // Io provides CancelProtection for this:
@@ -16,14 +16,14 @@
 //     // The cancel request is held until protection is restored.
 //
 // There are two states:
-//   .unblocked — normal: cancellation points can fire (default)
-//   .blocked   — protected: error.Canceled is never returned
+//   .unblocked - normal: cancellation points can fire (default)
+//   .blocked   - protected: error.Canceled is never returned
 //
-// There's also io.checkCancel() — a pure cancellation point
+// There's also io.checkCancel() - a pure cancellation point
 // that does nothing except return error.Canceled if a cancel
 // request is pending. Useful in long CPU-bound loops.
 //
-// And io.recancel() — re-arms a consumed cancel request so
+// And io.recancel() - re-arms a consumed cancel request so
 // the NEXT cancellation point will fire again.
 //
 // Fix this program so the critical section completes even
@@ -55,7 +55,7 @@ fn importantTask(io: std.Io) []const u8 {
     defer _ = io.???(old);
 
     // This sleep will NOT return error.Canceled even though
-    // we get canceled during it — protection is active!
+    // we get canceled during it - protection is active!
     io.sleep(std.Io.Duration.fromMilliseconds(300), .awake) catch |err| switch (err) {
         error.Canceled => {
             // This should never happen while protected!

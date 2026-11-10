@@ -1,5 +1,5 @@
 //
-// Tasks often need to communicate! Io provides Queue for this —
+// Tasks often need to communicate! Io provides Queue for this -
 // a bounded, thread-safe channel for passing data between tasks:
 //
 //     var backing: [16]u32 = undefined;
@@ -15,7 +15,7 @@
 // that no more data is coming. After that, getOne() will return
 // error.Closed once the queue is drained.
 //
-// This is the classic producer/consumer pattern — one task
+// This is the classic producer/consumer pattern - one task
 // generates work, another processes it, and the queue handles
 // all the synchronization automatically.
 //

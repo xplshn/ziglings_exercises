@@ -19,12 +19,12 @@
 //     defer _ = future.cancel(io);  // safety net
 //     // ... later, if we want the result:
 //     const result = future.await(io);
-//     // (await after cancel is fine — it just returns the result)
+//     // (await after cancel is fine - it just returns the result)
 //
 // Both .await() and .cancel() block until the task finishes and
 // return the result. The difference is that .cancel() also
 // requests the task to stop at its next cancellation point.
-// Calling either one more than once is safe — subsequent calls
+// Calling either one more than once is safe - subsequent calls
 // just return a copy of the result.
 //
 // Fix this program so that computeAnswer runs asynchronously

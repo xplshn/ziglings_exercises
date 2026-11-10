@@ -1,5 +1,5 @@
 //
-// Quiz Time — Async I/O!
+// Quiz Time - Async I/O!
 //
 // Doctor Zoraptera's insect simulation is going well, but she
 // realized that her virtual garden needs weather data! Insects
@@ -27,7 +27,7 @@
 // *                A NOTE ABOUT THIS EXERCISE                 *
 // *                                                           *
 // * This quiz uses concepts from exercises 085-094.           *
-// * There are 6 bugs to fix — look for the ???s!              *
+// * There are 6 bugs to fix - look for the ???s!              *
 // *                                                           *
 // *************************************************************
 //
@@ -81,7 +81,7 @@ pub fn main(init: std.process.Init) !void {
     var collector_future = try io.???(collector, .{ io, &queue, &weather });
     defer _ = collector_future.cancel(io);
 
-    // Sensor group: the sensors can use async — they just need
+    // Sensor group: the sensors can use async - they just need
     // to run, and async is more portable.
     var sensors: std.Io.Group = .init;
 
@@ -93,14 +93,14 @@ pub fn main(init: std.process.Init) !void {
     // What Group method blocks until all tasks complete?
     try sensors.???(io);
 
-    // All sensors done — close the queue so the collector knows
+    // All sensors done - close the queue so the collector knows
     // there's no more data coming.
     queue.close(io);
 
     // Bug 4: How do we wait for the collector to drain the remaining queue?
     _ = collector_future.???(io);
 
-    // Now write the garden report. This is critical — it must
+    // Now write the garden report. This is critical - it must
     // NOT be interrupted, even if something tries to cancel us!
     //
     // Bug 5: Protect this section from cancellation.
@@ -180,7 +180,7 @@ fn printGardenReport(weather: *GardenWeather) void {
 //   Batch      - submit multiple I/O operations at once
 //
 // The key insight: all of these work through the Io VTable,
-// so your code is portable across backends — whether Threaded
+// so your code is portable across backends - whether Threaded
 // (OS thread pool), or Evented (M:N green threads / fibers
 // that can provide concurrency even on a single OS thread).
 //

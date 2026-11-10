@@ -30,8 +30,8 @@ pub fn main() void {
 //
 // A look into the future:
 // When you allocate memory, you store the returned address in
-// a const var. The pointer itself never changes — it always
-// refers to the same allocation — but you can still read and
+// a const var. The pointer itself never changes - it always
+// refers to the same allocation - but you can still read and
 // write the data it points to.
 //
 // Example:

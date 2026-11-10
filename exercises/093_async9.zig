@@ -7,7 +7,7 @@
 //   io.async():
 //     * The function MAY run on a separate unit of concurrency,
 //       or it may run immediately on the caller (synchronously).
-//     * Never fails — if no concurrency is available, it just
+//     * Never fails - if no concurrency is available, it just
 //       runs the function right away.
 //     * More portable, works with all Io backends.
 //

@@ -23,7 +23,7 @@
 //
 // Remember: both .await() and .cancel() block and return the
 // result. The only difference is that .cancel() also sends
-// the cancellation request. And both are idempotent — calling
+// the cancellation request. And both are idempotent - calling
 // either one again just returns the same result.
 //
 // Fix this program: the slow task would take 10 seconds,

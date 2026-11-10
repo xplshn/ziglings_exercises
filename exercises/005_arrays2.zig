@@ -33,6 +33,8 @@ pub fn main() void {
     const len = ???;
 
     // For now, don't worry about the use of SIMD.
+    // However, this is a good time to try zig's amazing self-hosted documentation.
+    // Please try: `zig std` on the command-line and search for the repeat function in the browser.
     const bit_pattern: [len]u8 = std.simd.repeat(len, bit_pattern_unit);
 
     // Okay, that's all of the problems. Let's see the results.

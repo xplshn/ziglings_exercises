@@ -3,7 +3,7 @@
 // finishes first. That's what Select is for!
 //
 // Select is like a Group, but lets you receive individual results
-// as tasks complete — one at a time:
+// as tasks complete - one at a time:
 //
 //     const Race = std.Io.Select(union(enum) {
 //         fast: u32,
@@ -59,18 +59,18 @@ pub fn main(init: std.process.Init) !void {
         .tortoise => |msg| print("Tortoise: {s}\n", .{msg}),
     }
 
-    // Clean up the loser — we don't need their result.
+    // Clean up the loser - we don't need their result.
     sel.cancelDiscard();
 }
 
 fn runHare(io: std.Io) []const u8 {
-    // The hare is fast — only 1 second!
+    // The hare is fast - only 1 second!
     io.sleep(std.Io.Duration.fromSeconds(1), .awake) catch return "I got canceled!";
     return "I'm fast!";
 }
 
 fn runTortoise(io: std.Io) []const u8 {
-    // The tortoise is slow — 10 seconds.
+    // The tortoise is slow - 10 seconds.
     io.sleep(std.Io.Duration.fromSeconds(10), .awake) catch return "I got canceled!";
     return "Slow and steady...";
 }

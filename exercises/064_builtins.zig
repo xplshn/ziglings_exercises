@@ -62,7 +62,8 @@ pub fn main() void {
     // our way backwards to the operation that caused the overflow.
     //
     // If there was no overflow at all while adding 5 to a, what value would
-    // 'my_result' hold? Write the answer in into 'expected_result'.
+    // 'my_result[0]' hold? Do the math yourself and write the answer as a
+    // literal into 'expected_result'.
     const expected_result: u8 = ???;
     print(". Without overflow: {b:0>8}. ", .{expected_result});
 

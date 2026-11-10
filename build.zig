@@ -90,6 +90,20 @@ pub fn build(b: *Build) !void {
         run.addArg("--logo");
     }
 
+    const only_logo = exno == null and rand == null and start == null and logo != null;
+    if (!only_logo) {
+        b.dependOnDirectoryContents(b.path(work_path));
+        var work_dir = try b.root.root_dir.handle.openDir(io, work_path, .{ .iterate = true });
+        defer work_dir.close(io);
+
+        var entries = work_dir.iterate();
+        while (try entries.next(io)) |entry| {
+            if (entry.kind != .file and entry.kind != .sym_link) continue;
+            if (!std.mem.endsWith(u8, entry.name, ".zig")) continue;
+            run.addFileInput(b.path(b.pathJoin(&.{ work_path, entry.name })));
+        }
+    }
+
     const ziglings_step = b.step("ziglings", "Run ziglings");
     ziglings_step.dependOn(&run.step);
     b.default_step = ziglings_step;

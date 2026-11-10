@@ -1,5 +1,5 @@
---- exercises/095_quiz_async.zig	2026-04-13 19:11:04.173440326 -0700
-+++ answers/095_quiz_async.zig	2026-04-13 19:10:31.618592222 -0700
+--- exercises/095_quiz_async.zig	2026-11-07 18:27:01.684024017 +0100
++++ answers/095_quiz_async.zig	2026-11-07 18:43:29.442916802 +0100
 @@ -51,7 +51,7 @@
      fn addReading(self: *GardenWeather, io: std.Io, reading: Reading) void {
          // Bug 1: The collector needs to lock before modifying
@@ -17,7 +17,7 @@
 +    var collector_future = try io.concurrent(collector, .{ io, &queue, &weather });
      defer _ = collector_future.cancel(io);
  
-     // Sensor group: the sensors can use async — they just need
+     // Sensor group: the sensors can use async - they just need
 @@ -91,22 +91,22 @@
  
      // Bug 3: Wait for ALL sensors to finish sending their readings.
@@ -25,7 +25,7 @@
 -    try sensors.???(io);
 +    try sensors.await(io);
  
-     // All sensors done — close the queue so the collector knows
+     // All sensors done - close the queue so the collector knows
      // there's no more data coming.
      queue.close(io);
  
@@ -33,7 +33,7 @@
 -    _ = collector_future.???(io);
 +    _ = collector_future.await(io);
  
-     // Now write the garden report. This is critical — it must
+     // Now write the garden report. This is critical - it must
      // NOT be interrupted, even if something tries to cancel us!
      //
      // Bug 5: Protect this section from cancellation.

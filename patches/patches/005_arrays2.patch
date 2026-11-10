@@ -1,5 +1,5 @@
---- exercises/005_arrays2.zig	2026-10-29 23:16:35.980764654 +0100
-+++ answers/005_arrays2.zig	2026-10-29 23:16:18.813395081 +0100
+--- exercises/005_arrays2.zig	2026-11-07 19:30:25.336408351 +0100
++++ answers/005_arrays2.zig	2026-11-07 22:53:39.981026105 +0100
 @@ -21,16 +21,16 @@
      // (Problem 1)
      // Please set this array concatenating the two arrays above.
@@ -19,4 +19,4 @@
 +    const len = 3 * bit_pattern_unit.len;
  
      // For now, don't worry about the use of SIMD.
-     const bit_pattern: [len]u8 = std.simd.repeat(len, bit_pattern_unit);
+     // However, this is a good time to try zig's amazing self-hosted documentation.
